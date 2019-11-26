@@ -1,3 +1,5 @@
+var queryString = require('querystring');
+  
 function home(response){
     console.log("Excecuting home handler!\n");
 
@@ -21,10 +23,10 @@ function home(response){
     response.end();
 }
 
-function review(response){
+function review(response, reviewData){
     console.log("Executing review handler!\n");
     response.writeHead(200, {"Content-Type" : "text/plain"});
-    response.write("HELLO FROM REVIEW!");
+    response.write(queryString.parse(reviewData).text);
     response.end();
 }
 

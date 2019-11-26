@@ -5,8 +5,17 @@ function startServer(route, handle){
     http.createServer(function(request, response){
         var pathname = url.parse(request.url).pathname;
         console.log("New Requiest!");
+        var reviewData = "";
         console.log("Requested for : " + pathname);
-        route(handle, pathname, response);
+        request.setEncoding('utf8');
+
+        request.on('data', function(chunk){
+            reviewData += chunk;
+        });
+
+        request.on('end', function(){
+            route(handle, pathname, response, reviewData);
+        });
         // response.writeHead(200, {"Content-Type" : "text/plain"});
         // response.write("HELLO FROM OUR APPLICATION!");
         // response.end();
