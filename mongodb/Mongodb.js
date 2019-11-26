@@ -9,6 +9,17 @@ mongoClient.connect(url, function(err, db){
         console.log(err);
     }else{
         console.log("Connected to ", url);
-        db.close();
+        var collection = db.collection('apples');
+        var docOne = {name : 'red apples', color : 'red'};
+        var docTwo = {name : 'green apples', color : 'green'};
+
+        collection.insert([docOne, docTwo], function(err, res){
+            if(err){
+                console.log(err);
+            }else{
+                console.log("%d docs inserted!", res.insertedCount);
+            }
+            db.close();
+        });
     }
 });
