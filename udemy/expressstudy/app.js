@@ -1,11 +1,23 @@
 // const http = require('http');
 
 const express = require('express');
+const bodyParser = require('body-parser');
 
 const app = express();
 
+app.use(bodyParser.urlencoded({extended: false}));
+
 app.use('/add-product', (request, response, next)=>{
-    response.send('<h1>You can add your product!</h1>');
+    response.send(
+        `<form action="/product" method="POST">
+            <input type="text" name="title"/>
+            <button type="submit">SUBMIT</button>
+        </form>`);
+});
+
+app.use('/product', (request, response, next)=>{
+    console.log(JSON.stringify(request.body));
+    response.redirect('/');
 });
 
 
