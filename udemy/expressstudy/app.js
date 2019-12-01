@@ -7,7 +7,7 @@ const app = express();
 
 app.use(bodyParser.urlencoded({extended: false}));
 
-app.use('/add-product', (request, response, next)=>{
+app.get('/add-product', (request, response, next)=>{
     response.send(
         `<form action="/product" method="POST">
             <input type="text" name="title"/>
@@ -15,13 +15,13 @@ app.use('/add-product', (request, response, next)=>{
         </form>`);
 });
 
-app.use('/product', (request, response, next)=>{
+app.post('/product', (request, response, next)=>{
     console.log(JSON.stringify(request.body));
     response.redirect('/');
 });
 
 
-app.use('/', (request, response, next)=>{
+app.get('/', (request, response, next)=>{
     response.send('<h1>Hello from express!</h1>');
 });
 
