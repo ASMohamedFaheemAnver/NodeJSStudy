@@ -2,8 +2,8 @@ const express = require('express');
 
 const router = express.Router();
 
-router.get('/', (request, response, next)=>{
-    response.send('<h1>Hello from express!</h1>');
+router.get('/', (req, res, next)=>{
+    res.send('<p>http://localhost:3000/</p>');
 });
 
 module.exports = router;
