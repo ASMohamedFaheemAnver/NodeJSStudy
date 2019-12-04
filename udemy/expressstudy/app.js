@@ -17,7 +17,7 @@ app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 
 app.use((req, res, next)=>{
-    res.sendFile(path.join(__dirname, 'views', 'page-not-found.html'));
+    res.status(404).sendFile(path.join(__dirname, 'views', 'page-not-found.html'));
 });
 
 const PORT = 3000;
