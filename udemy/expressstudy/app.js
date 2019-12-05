@@ -10,6 +10,11 @@ const path = require('path');
 
 const app = express();
 
+// Compile with dynamic engine pug
+app.set('view engine', 'pug');
+// Where we can find the dynamic html files
+app.set('veiws', 'views');
+
 app.use(bodyParser.urlencoded({extended: false}));
 
 app.use('/admin', adminData.routes);
