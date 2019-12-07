@@ -15,7 +15,7 @@ const products = [];
 
 // /admin/add-product => POST
 router.post('/add-product', (req, res, next)=>{
-    console.log(JSON.stringify(req.body));
+    // console.log(JSON.stringify(req.body));
     products.push({title: req.body.title});
     res.redirect('/');
 
