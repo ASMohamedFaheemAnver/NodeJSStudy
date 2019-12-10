@@ -9,7 +9,7 @@ const rootDir = require('../util/path');
 // /admin/add-product => GET
 router.get('/add-product', (req, res, next)=>{
     // res.sendFile(path.join(rootDir, 'views', 'add-product.pug'));
-    res.render(path.join(rootDir, 'views', 'add-product.hbs'));
+    res.render(path.join(rootDir, 'views', 'add-product.hbs'), {pageTitle: 'ADD PRODUCT'});
 });
 
 const products = [];
