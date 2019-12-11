@@ -8,7 +8,15 @@ const shopRoutes = require('./routes/shop');
 
 const path = require('path');
 
+const hbs = require('express-handlebars');
+
 const app = express();
+
+app.engine('hbs', hbs({
+    extname: 'hbs',
+    defaultLayout: 'main-layout',
+    layoutsDir: __dirname + '/views/layouts/',
+}));
 
 // Let express to use handle bar
 
@@ -17,10 +25,11 @@ const app = express();
 
 // Compile with dynamic engine handlebar
 app.set('view engine', 'hbs');
+
 // Where we can find the dynamic html files
 app.set('veiws', 'views');
 
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/admin', adminData.routes);
 
@@ -28,12 +37,12 @@ app.use(shopRoutes);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use((req, res, next)=>{
-    res.status(404).render('page-not-found', {pageTitle: 'PAGE NOT FOUND'});
+app.use((req, res, next) => {
+    res.status(404).render('page-not-found', { pageTitle: 'PAGE NOT FOUND', isPageFound: false });
 });
 
 const PORT = 3000;
-app.listen(PORT, ()=>{
+app.listen(PORT, () => {
     console.log('Server is running on : localhost:' + PORT);
 });
 // const server = http.createServer(app).listen(PORT);
