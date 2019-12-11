@@ -9,7 +9,16 @@ const rootDir = require('../util/path');
 // /admin/add-product => GET
 router.get('/add-product', (req, res, next)=>{
     // res.sendFile(path.join(rootDir, 'views', 'add-product.pug'));
-    res.render(path.join(rootDir, 'views', 'add-product.hbs'), {pageTitle: 'ADD PRODUCT', isPageFound: true});
+    templateData = {
+        prods: products, 
+        pageTitle: 'SHOP', 
+        hasProds: products.length>0,
+        isPageFound: true,
+        isProductCSS: true,
+        isMainCSS: true,
+        isShopCSS: false,
+    };
+    res.render(path.join(rootDir, 'views', 'add-product.hbs'), templateData);
 });
 
 const products = [];
