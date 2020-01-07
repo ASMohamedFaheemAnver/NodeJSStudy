@@ -8,15 +8,15 @@ const shopRoutes = require('./routes/shop');
 
 const path = require('path');
 
-const hbs = require('express-handlebars');
+// const hbs = require('express-handlebars');
 
 const app = express();
 
-app.engine('hbs', hbs({
-    extname: 'hbs',
-    defaultLayout: 'main-layout',
-    layoutsDir: __dirname + '/views/layouts/',
-}));
+// app.engine('hbs', hbs({
+//     extname: 'hbs',
+//     defaultLayout: 'main-layout',
+//     layoutsDir: __dirname + '/views/layouts/',
+// }));
 
 // Let express to use handle bar
 
@@ -24,7 +24,8 @@ app.engine('hbs', hbs({
 // app.set('view engine', 'pug');
 
 // Compile with dynamic engine handlebar
-app.set('view engine', 'hbs');
+// app.set('view engine', 'hbs');
+app.set('view engine', 'ejs');
 
 // Where we can find the dynamic html files
 app.set('veiws', 'views');

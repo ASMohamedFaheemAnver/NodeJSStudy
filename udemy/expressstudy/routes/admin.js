@@ -11,14 +11,14 @@ router.get('/add-product', (req, res, next)=>{
     // res.sendFile(path.join(rootDir, 'views', 'add-product.pug'));
     templateData = {
         prods: products, 
-        pageTitle: 'SHOP', 
+        pageTitle: 'ADD PRODUCT', 
         hasProds: products.length>0,
         isPageFound: true,
         isProductCSS: true,
         isMainCSS: true,
         isShopCSS: false,
     };
-    res.render(path.join(rootDir, 'views', 'add-product.hbs'), templateData);
+    res.render(path.join(rootDir, 'views', 'add-product'), templateData);
 });
 
 const products = [];
