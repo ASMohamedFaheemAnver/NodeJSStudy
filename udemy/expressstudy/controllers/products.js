@@ -15,7 +15,7 @@ exports.getAddProduct = (req, res, next)=>{
         isMainCSS: true,
         isShopCSS: false,
     };
-    res.render(/*path.join(rootDir, 'views', 'add-product')*/ 'add-product', templateData);
+    res.render(/*path.join(rootDir, 'views', 'add-product')*/ 'admin/add-product', templateData);
 }
 
 exports.postAddProduct = (req, res, next)=>{
@@ -47,7 +47,7 @@ exports.getProducts = (req, res, next)=>{
             hasProds: products.length>0,
         };
         // console.log(templateData);
-        res.render('shop', templateData);
+        res.render('shop/product-list', templateData);
         // res.sendFile(path.join(rootDir, 'views', 'shop.html'));
     });
 }
