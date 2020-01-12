@@ -10,10 +10,7 @@ exports.getAddProduct = (req, res, next)=>{
     // res.sendFile(path.join(rootDir, 'views', 'add-product.pug'));
     templateData = { 
         pageTitle: 'ADD PRODUCT', 
-        isPageFound: false,
-        isProductCSS: true,
-        isMainCSS: true,
-        isShopCSS: false,
+        path: '/admin/add-product'
     };
     res.render(/*path.join(rootDir, 'views', 'add-product')*/ 'admin/add-product', templateData);
 }
@@ -40,10 +37,7 @@ exports.getProducts = (req, res, next)=>{
         templateData = {
             prods: products, 
             pageTitle: 'SHOP', 
-            isPageFound: false,
-            isProductCSS: false,
-            isMainCSS: true,
-            isShopCSS: true,
+            path: '/',
             hasProds: products.length>0,
         };
         // console.log(templateData);
