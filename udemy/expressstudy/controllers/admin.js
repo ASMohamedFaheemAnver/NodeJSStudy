@@ -1,9 +1,4 @@
-// const path = require('path');
-// const rootDir = require('../util/path');
-
-// const products = [];
 const Product = require('../models/product');
-// const errorTracer = require('../debug/error-tracer');
 
 exports.getAddProduct = (req, res, next)=>{
     // console.log(errorTracer.lineTracer());
@@ -28,20 +23,16 @@ exports.postAddProduct = (req, res, next)=>{
     res.send('<p>PLEASE ENTER DATA TO SUBMIT!</p>');
 }
 
-exports.getProducts = (req, res, next)=>{
-    // console.log(errorTracer.lineTracer());
-    // console.log(adminData.products);
-    // let products = adminData.products;
-    // console.log(products.length);
+exports.getProducts = (req, res, next) =>{
     Product.fetchAll(products=>{
         templateData = {
             prods: products, 
-            pageTitle: 'SHOP', 
-            path: '/',
+            pageTitle: 'ADMIN PRODUCTS', 
+            path: '/admin/products',
             hasProds: products.length>0,
         };
         // console.log(templateData);
-        res.render('shop/product-list', templateData);
+        res.render('admin/product-list', templateData);
         // res.sendFile(path.join(rootDir, 'views', 'shop.html'));
     });
 }
