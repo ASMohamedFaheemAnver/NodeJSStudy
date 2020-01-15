@@ -4,6 +4,7 @@
 // const products = [];
 const Product = require('../models/product');
 // const errorTracer = require('../debug/error-tracer');
+const Cart = require('../models/cart');
 
 exports.getProducts = (req, res, next)=>{
     // console.log(errorTracer.lineTracer());
@@ -48,6 +49,14 @@ exports.getCart = (req, res, next) =>{
         path: '/cart',
         pageTitle: 'YOUR CART'
     });
+}
+
+exports.postCart = (req, res, next)=>{
+    const prodId = req.body.productId;
+    Product.findById(prodId, (product)=>{
+        Cart.addProduct(prodId, product.price);
+    });
+    res.redirect('/cart');
 }
 
 exports.getCheckout = (req, res, next) =>{
