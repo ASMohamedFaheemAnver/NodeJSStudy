@@ -77,3 +77,9 @@ exports.getProducts = (req, res, next) =>{
         // res.sendFile(path.join(rootDir, 'views', 'shop.html'));
     });
 }
+
+exports.postDeleteProduct = (req, res, next) =>{
+    const prodId = req.body.productId;
+    Product.delete(prodId);
+    res.redirect('/admin/products');
+}

@@ -4,6 +4,7 @@
 // const errorTracer = require('../debug/error-tracer');
 const fs = require("fs");
 const path = require("path");
+const Cart = require('./cart');
 
 const p = path.join(
   path.dirname(process.mainModule.filename),
@@ -49,6 +50,21 @@ module.exports = class Product {
         if (err) {
           console.log(err);
         }
+      });
+    });
+  }
+
+  static delete(id){
+    getProductsFromFile(products=>{
+      const deletingProductId = products.findIndex(p=> p.id===id);
+      const deletingProduct = products[deletingProductId];
+      products.pop(deletingProduct);
+      // products = products.filter(p=> p.id!==id);
+      fs.writeFile(p, JSON.stringify(products), err => {
+        if (err) {
+          return console.log(err);
+        }
+        Cart.deleteProduct(id, deletingProduct.price);
       });
     });
   }
