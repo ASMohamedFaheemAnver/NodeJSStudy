@@ -5,9 +5,10 @@ exports.getAddProduct = (req, res, next)=>{
     // res.sendFile(path.join(rootDir, 'views', 'add-product.pug'));
     templateData = { 
         pageTitle: 'ADD PRODUCT', 
-        path: '/admin/add-product'
+        path: '/admin/add-product',
+        editing: false
     };
-    res.render(/*path.join(rootDir, 'views', 'add-product')*/ 'admin/add-product', templateData);
+    res.render(/*path.join(rootDir, 'views', 'add-product')*/ 'admin/edit-product', templateData);
 }
 
 exports.postAddProduct = (req, res, next)=>{
@@ -19,13 +20,48 @@ exports.postAddProduct = (req, res, next)=>{
     const description = req.body.description;
 
     if(title && imageUrl && price && description){
-        const product = new Product(title, imageUrl, price, description);
+        const product = new Product(null, title, imageUrl, price, description);
         // console.log(product);
         product.save();
         // products.push({title: req.body.title});
         return res.redirect('/');
     }
     res.send('<p>PLEASE ENTER DATA TO SUBMIT!</p>');
+}
+
+exports.getEditProduct = (req, res, next)=>{
+    // console.log(errorTracer.lineTracer());
+    // res.sendFile(path.join(rootDir, 'views', 'add-product.pug'));
+    const editMode = req.query.edit;
+    if(!editMode){
+        return res.redirect('/');
+    }
+    const prodId = req.params.productId;
+    Product.findById(prodId, (product)=>{
+        if(!product){
+            return res.redirect('/');
+        }
+
+        templateData = { 
+            pageTitle: 'EDIT PRODUCT', 
+            path: '/admin/edit-product',
+            editing: editMode,
+            product: product
+        };
+        res.render(/*path.join(rootDir, 'views', 'add-product')*/ 'admin/edit-product', templateData);
+    });
+}
+
+exports.postEditProduct = (req, res, next)=>{
+    const prodId = req.body.productId;
+    const title = req.body.title;
+    const price = req.body.price;
+    const imageUrl = req.body.imageUrl;
+    const description = req.body.description;
+
+    const updatedProduct = new Product(prodId, title, imageUrl, price, description);
+    updatedProduct.save();
+    res.redirect('/admin/products');
 }
 
 exports.getProducts = (req, res, next) =>{
