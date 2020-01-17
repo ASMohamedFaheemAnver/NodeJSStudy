@@ -1,13 +1,15 @@
 // const http = require('http');
 
-const express = require('express');
-const bodyParser = require('body-parser');
+const express = require("express");
+const bodyParser = require("body-parser");
 
-const adminRoutes = require('./routes/admin');
-const shopRoutes = require('./routes/shop');
+const adminRoutes = require("./routes/admin");
+const shopRoutes = require("./routes/shop");
 
-const path = require('path');
-const errorsController = require('./controllers/errors');
+const path = require("path");
+const errorsController = require("./controllers/errors");
+
+// const db = require("./util/database");
 
 // const hbs = require('express-handlebars');
 
@@ -26,23 +28,31 @@ const app = express();
 
 // Compile with dynamic engine handlebar
 // app.set('view engine', 'hbs');
-app.set('view engine', 'ejs');
+app.set("view engine", "ejs");
 
 // Where we can find the dynamic html files
-app.set('veiws', 'views');
+app.set("veiws", "views");
+
+// db.execute("SELECT * FROM products")
+//   .then(result => {
+//     console.log(result[0]);
+//   })
+//   .catch(err => {
+//     console.log(err);
+//   });
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use('/admin', adminRoutes);
+app.use("/admin", adminRoutes);
 
 app.use(shopRoutes);
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, "public")));
 
 app.use(errorsController.pageNotFound);
 
 const PORT = 3000;
 app.listen(PORT, () => {
-    console.log('Server is running on : localhost:' + PORT);
+  console.log("Server is running on : localhost:" + PORT);
 });
 // const server = http.createServer(app).listen(PORT);

@@ -11,7 +11,7 @@ exports.getProducts = (req, res, next) => {
   // console.log(adminData.products);
   // let products = adminData.products;
   // console.log(products.length);
-  Product.fetchAll(products => {
+  Product.fetchAll(/*products => {
     templateData = {
       prods: products,
       pageTitle: "ALL PRODUCTS",
@@ -21,6 +21,16 @@ exports.getProducts = (req, res, next) => {
     // console.log(templateData);
     res.render("shop/product-list", templateData);
     // res.sendFile(path.join(rootDir, 'views', 'shop.html'));
+  }*/).then(([rows, fieldData])=>{
+    templateData = {
+      prods: rows,
+      pageTitle: "ALL PRODUCTS",
+      path: "/products",
+      hasProds: rows.length > 0
+    };
+    res.render("shop/product-list", templateData);
+  }).catch(err=>{
+    console.log(err);
   });
 };
 
@@ -36,7 +46,7 @@ exports.getProduct = (req, res, next) => {
 };
 
 exports.getIndex = (req, res, next) => {
-  Product.fetchAll(products => {
+  Product.fetchAll(/*products => {
     templateData = {
       prods: products,
       pageTitle: "SHOP",
@@ -45,7 +55,20 @@ exports.getIndex = (req, res, next) => {
     // console.log(templateData);
     res.render("shop/index", templateData);
     // res.sendFile(path.join(rootDir, 'views', 'shop.html'));
-  });
+  }*/)
+    .then(([rows, fieldData]) => {
+      templateData = {
+        prods: rows,
+        pageTitle: "SHOP",
+        path: "/"
+      };
+      // console.log(templateData);
+      res.render("shop/index", templateData);
+      // res.sendFile(path.join(rootDir, 'views', 'shop.html'));
+    })
+    .catch(err => {
+      console.log(err);
+    });
 };
 
 exports.getCart = (req, res, next) => {
@@ -78,11 +101,11 @@ exports.postCart = (req, res, next) => {
 };
 
 exports.postCartDeleteProduct = (req, res, next) => {
-    const prodId = req.body.productId;
-    Product.findById(prodId, product=>{
-        Cart.deleteProduct(prodId, product.price);
-        res.redirect('/cart');
-    });
+  const prodId = req.body.productId;
+  Product.findById(prodId, product => {
+    Cart.deleteProduct(prodId, product.price);
+    res.redirect("/cart");
+  });
 };
 
 exports.getCheckout = (req, res, next) => {
