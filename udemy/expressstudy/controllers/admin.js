@@ -22,9 +22,12 @@ exports.postAddProduct = (req, res, next)=>{
     if(title && imageUrl && price && description){
         const product = new Product(null, title, imageUrl, price, description);
         // console.log(product);
-        product.save();
+        return product.save().then(()=>{
+            res.redirect('/');
+        }).catch(err=>{
+            console.log(err);
+        });
         // products.push({title: req.body.title});
-        return res.redirect('/');
     }
     res.send('<p>PLEASE ENTER DATA TO SUBMIT!</p>');
 }
