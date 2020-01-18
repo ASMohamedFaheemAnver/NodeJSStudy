@@ -31,18 +31,27 @@ exports.postAddProduct = (req, res, next) => {
     //     console.log(err);
     // });
     // products.push({title: req.body.title});
-    return Product.create({
-      title: title,
-      price: price,
-      imageUrl: imageUrl,
-      description: description
-    })
-      .then(result => {
-        res.redirect("/");
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    return (
+      req.user
+        .createProduct({
+          title: title,
+          price: price,
+          imageUrl: imageUrl,
+          description: description
+        })
+        // return Product.create({
+        //   title: title,
+        //   price: price,
+        //   imageUrl: imageUrl,
+        //   description: description
+        // })
+        .then(_ => {
+          res.redirect("/");
+        })
+        .catch(err => {
+          console.log(err);
+        })
+    );
   }
   res.send("<p>PLEASE ENTER DATA TO SUBMIT!</p>");
 };
@@ -71,7 +80,8 @@ exports.getEditProduct = (req, res, next) => {
   //       templateData
   //     );
   //   });
-  Product.findByPk(prodId)
+  // Product.findByPk(prodId)
+  req.user.getProducts({where: {id: prodId}})
     .then(product => {
       if (!product) {
         return res.redirect("/");
@@ -80,7 +90,7 @@ exports.getEditProduct = (req, res, next) => {
         pageTitle: "EDIT PRODUCT",
         path: "/admin/edit-product",
         editing: editMode,
-        product: product
+        product: product[0]
       };
       res.render(
         /*path.join(rootDir, 'views', 'add-product')*/ "admin/edit-product",
@@ -106,7 +116,8 @@ exports.postEditProduct = (req, res, next) => {
   //     price,
   //     description
   //   );
-  Product.findByPk(prodId)
+  // Product.findByPk(prodId)
+  req.user.getProducts({where: {id: prodId}})
     .then(product => {
       product.title = title;
       product.price = price;
@@ -136,7 +147,8 @@ exports.getProducts = (req, res, next) => {
   //     res.render("admin/product-list", templateData);
   //     // res.sendFile(path.join(rootDir, 'views', 'shop.html'));
   //   });
-  Product.findAll()
+  // Product.findAll()
+  req.user.getProducts()
     .then(products => {
       templateData = {
         prods: products,

@@ -187,9 +187,20 @@ main {
   cursor: pointer;
 }
 
+.danger{
+  color: red;
+  border: 1px solid red;
+}
+
 .btn:hover,
 .btn:active {
   background-color: #00695c;
+  color: white;
+}
+
+.danger:hover,
+.danger:active{
+  background-color: red;
   color: white;
 }
 

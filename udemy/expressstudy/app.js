@@ -13,6 +13,8 @@ const errorsController = require("./controllers/errors");
 const sequelize = require("./util/database");
 const Product = require("./models/product");
 const User = require("./models/user");
+const Cart = require("./models/cart");
+const CartItem = require("./models/cart-item");
 
 // const hbs = require('express-handlebars');
 
@@ -67,8 +69,16 @@ app.use(errorsController.pageNotFound);
 
 Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
 User.hasMany(Product);
+User.hasOne(Cart);
+Cart.belongsTo(User);
+Cart.belongsToMany(Product, { through: CartItem });
+Product.belongsToMany(Cart, { through: CartItem });
 
+const PORT = 3000;
+
+let oUser;
 sequelize
+  // .sync({force: true})
   .sync()
   .then(_ => {
     return User.findByPk(1);
@@ -77,10 +87,18 @@ sequelize
     if (!user) {
       return User.create({ name: "RiFa", email: "jstrfaheem065@gmail.com" });
     }
-    return Promise.resolve(user);
+    // return Promise.resolve(user);
+    oUser = user;
+    return user;
+  })
+  .then(user => {
+    return user.getCart();
+  }).then(cart=>{
+    if(!cart){
+      return oUser.createCart();
+    }
   })
   .then(_ => {
-    const PORT = 3000;
     app.listen(PORT, () => {
       console.log("Server is running on : localhost:" + PORT);
     });
