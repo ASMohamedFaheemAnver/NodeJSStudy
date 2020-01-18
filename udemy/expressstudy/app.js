@@ -10,6 +10,7 @@ const path = require("path");
 const errorsController = require("./controllers/errors");
 
 // const db = require("./util/database");
+const sequelize = require("./util/database");
 
 // const hbs = require('express-handlebars');
 
@@ -51,8 +52,16 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(errorsController.pageNotFound);
 
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log("Server is running on : localhost:" + PORT);
-});
+sequelize
+  .sync()
+  .then(result => {
+    const PORT = 3000;
+    app.listen(PORT, () => {
+      console.log("Server is running on : localhost:" + PORT);
+    });
+  })
+  .catch(err => {
+    console.log(err);
+  });
+
 // const server = http.createServer(app).listen(PORT);

@@ -11,66 +11,110 @@ exports.getProducts = (req, res, next) => {
   // console.log(adminData.products);
   // let products = adminData.products;
   // console.log(products.length);
-  Product.fetchAll(/*products => {
-    templateData = {
-      prods: products,
-      pageTitle: "ALL PRODUCTS",
-      path: "/products",
-      hasProds: products.length > 0
-    };
-    // console.log(templateData);
-    res.render("shop/product-list", templateData);
-    // res.sendFile(path.join(rootDir, 'views', 'shop.html'));
-  }*/).then(([rows, fieldData])=>{
-    templateData = {
-      prods: rows,
-      pageTitle: "ALL PRODUCTS",
-      path: "/products",
-      hasProds: rows.length > 0
-    };
-    res.render("shop/product-list", templateData);
-  }).catch(err=>{
-    console.log(err);
-  });
+  // Product.fetchAll(/*products => {
+  //   templateData = {
+  //     prods: products,
+  //     pageTitle: "ALL PRODUCTS",
+  //     path: "/products",
+  //     hasProds: products.length > 0
+  //   };
+  //   // console.log(templateData);
+  //   res.render("shop/product-list", templateData);
+  //   // res.sendFile(path.join(rootDir, 'views', 'shop.html'));
+  // }*/).then(([rows, fieldData])=>{
+  //   templateData = {
+  //     prods: rows,
+  //     pageTitle: "ALL PRODUCTS",
+  //     path: "/products",
+  //     hasProds: rows.length > 0
+  //   };
+  //   res.render("shop/product-list", templateData);
+  // }).catch(err=>{
+  //   console.log(err);
+  // });
+  Product.findAll()
+    .then(products => {
+      templateData = {
+        prods: products,
+        pageTitle: "ALL PRODUCTS",
+        path: "/products",
+      };
+      res.render("shop/product-list", templateData);
+    })
+    .catch(err => {
+      console.log(err);
+    });
 };
 
 exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId;
-  Product.findById(prodId/*, product => {
-    res.render("shop/product-detail", {
-      product: product,
-      path: "/products",
-      pageTitle: product.title
+  // Product.findById(
+  //   prodId /*, product => {
+  //   res.render("shop/product-detail", {
+  //     product: product,
+  //     path: "/products",
+  //     pageTitle: product.title
+  //   });
+  // }*/
+  // )
+  //   .then(([rows, fieldData]) => {
+  //     res.render("shop/product-detail", {
+  //       product: rows[0],
+  //       path: "/products",
+  //       pageTitle: rows[0].title
+  //     });
+  //   })
+  //   .catch();
+  Product.findByPk(prodId)
+    .then(product => {
+      if(!product){
+        return;
+      }
+      templateData = {
+        product: product,
+        path: "/products",
+        pageTitle: product.title
+      };
+      res.render("shop/product-detail", templateData);
+    })
+    .catch(err => {
+      console.log(err);
     });
-  }*/).then(([rows, fieldData])=>{
-    res.render("shop/product-detail", {
-      product: rows[0],
-      path: "/products",
-      pageTitle: rows[0].title
-    });
-  }).catch();
 };
 
 exports.getIndex = (req, res, next) => {
-  Product.fetchAll(/*products => {
-    templateData = {
-      prods: products,
-      pageTitle: "SHOP",
-      path: "/"
-    };
-    // console.log(templateData);
-    res.render("shop/index", templateData);
-    // res.sendFile(path.join(rootDir, 'views', 'shop.html'));
-  }*/)
-    .then(([rows, fieldData]) => {
+  // Product.fetchAll(/*products => {
+  //   templateData = {
+  //     prods: products,
+  //     pageTitle: "SHOP",
+  //     path: "/"
+  //   };
+  //   // console.log(templateData);
+  //   res.render("shop/index", templateData);
+  //   // res.sendFile(path.join(rootDir, 'views', 'shop.html'));
+  // }*/)
+  //   .then(([rows, fieldData]) => {
+  //     templateData = {
+  //       prods: rows,
+  //       pageTitle: "SHOP",
+  //       path: "/"
+  //     };
+  //     // console.log(templateData);
+  //     res.render("shop/index", templateData);
+  //     // res.sendFile(path.join(rootDir, 'views', 'shop.html'));
+  //   })
+  //   .catch(err => {
+  //     console.log(err);
+  //   });
+  Product.findAll()
+    .then(products => {
       templateData = {
-        prods: rows,
+        prods: products,
         pageTitle: "SHOP",
         path: "/"
       };
       // console.log(templateData);
       res.render("shop/index", templateData);
-      // res.sendFile(path.join(rootDir, 'views', 'shop.html'));
     })
     .catch(err => {
       console.log(err);
@@ -100,14 +144,23 @@ exports.getCart = (req, res, next) => {
 
 exports.postCart = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.findById(prodId/*, product => {
-    Cart.addProduct(prodId, product.price);
-  }*/).then(([rows, fieldData])=>{
-    Cart.addProduct(prodId, rows[0].price);
-    res.redirect("/cart");
-  }).catch(err=>{
+  // Product.findById(
+  //   prodId /*, product => {
+  //   Cart.addProduct(prodId, product.price);
+  // }*/
+  // )
+  //   .then(([rows, fieldData]) => {
+  //     Cart.addProduct(prodId, rows[0].price);
+  //     res.redirect("/cart");
+  //   })
+  //   .catch(err => {
+  //     console.log(err);
+  //   });
+  Product.findByPk(prodId).then(product=>{
+    
+  }).then(err=>{
     console.log(err);
-  });
+  })
 };
 
 exports.postCartDeleteProduct = (req, res, next) => {
