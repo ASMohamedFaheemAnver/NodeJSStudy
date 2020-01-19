@@ -4,7 +4,7 @@
 // const products = [];
 const Product = require("../models/product");
 // const errorTracer = require('../debug/error-tracer');
-const Cart = require("../models/cart");
+// const Cart = require("../models/cart");
 
 exports.getProducts = (req, res, next) => {
   // console.log(errorTracer.lineTracer());
@@ -235,6 +235,35 @@ exports.getCheckout = (req, res, next) => {
     path: "/checkout",
     pageTitle: "CHECKOUT"
   });
+};
+
+exports.postOrder = (req, res, next) => {
+  req.user
+    .getCart()
+    .then(cart => {
+      return cart.getProducts();
+    })
+    .then(products => {
+      return req.user
+        .createOrder()
+        .then(order => {
+          return order.addProducts(
+            products.map(product => {
+              product.orderItem = { quantity: product.cartItem.quantity };
+              return product;
+            })
+          );
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    })
+    .then(_ => {
+      res.redirect("/orders");
+    })
+    .catch(err => {
+      console.log(err);
+    });
 };
 
 exports.getOrders = (req, res, next) => {
