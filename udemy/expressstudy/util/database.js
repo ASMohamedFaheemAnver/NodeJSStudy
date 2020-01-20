@@ -1,16 +1,22 @@
-// const mysql = require('mysql2');
+const mongodb = require("mongodb");
 
-// const pool = mysql.createPool({
-//     host: 'localhost',
-//     user: 'root',
-//     database: 'node-complete',
-//     password: ''
-// });
+const MongoClient = mongodb.MongoClient;
 
-// module.exports = pool.promise();
+const client = new MongoClient(
+  "mongodb+srv://rifa_flover:Ty4wzRMLVJqhP18F@node-zvzjs.mongodb.net/mean?retryWrites=true&w=majority",
+  { useUnifiedTopology: true }
+);
 
-const Sequelize = require('sequelize');
+const mongoConnect = cb => {
+  client
+    .connect()
+    .then(client => {
+      // console.log("Connected!");
+      cb(client);
+    })
+    .catch(err => {
+      console.log(err);
+    });
+};
 
-const sequelize = new Sequelize('node-complete', 'root', '', {dialect: 'mysql', host: 'localhost'});
-
-module.exports = sequelize;
+module.exports = mongoConnect;
