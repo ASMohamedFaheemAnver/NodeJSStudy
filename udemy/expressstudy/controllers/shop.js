@@ -1,38 +1,7 @@
-// const path = require('path');
-// const rootDir = require('../util/path');
-
-// const products = [];
 const Product = require("../models/product");
-// const errorTracer = require('../debug/error-tracer');
-// const Cart = require("../models/cart");
 
 exports.getProducts = (req, res, next) => {
-  // console.log(errorTracer.lineTracer());
-  // console.log(adminData.products);
-  // let products = adminData.products;
-  // console.log(products.length);
-  // Product.fetchAll(/*products => {
-  //   templateData = {
-  //     prods: products,
-  //     pageTitle: "ALL PRODUCTS",
-  //     path: "/products",
-  //     hasProds: products.length > 0
-  //   };
-  //   // console.log(templateData);
-  //   res.render("shop/product-list", templateData);
-  //   // res.sendFile(path.join(rootDir, 'views', 'shop.html'));
-  // }*/).then(([rows, fieldData])=>{
-  //   templateData = {
-  //     prods: rows,
-  //     pageTitle: "ALL PRODUCTS",
-  //     path: "/products",
-  //     hasProds: rows.length > 0
-  //   };
-  //   res.render("shop/product-list", templateData);
-  // }).catch(err=>{
-  //   console.log(err);
-  // });
-  Product.findAll()
+  Product.fetchAll()
     .then(products => {
       templateData = {
         prods: products,
@@ -83,37 +52,13 @@ exports.getProduct = (req, res, next) => {
 };
 
 exports.getIndex = (req, res, next) => {
-  // Product.fetchAll(/*products => {
-  //   templateData = {
-  //     prods: products,
-  //     pageTitle: "SHOP",
-  //     path: "/"
-  //   };
-  //   // console.log(templateData);
-  //   res.render("shop/index", templateData);
-  //   // res.sendFile(path.join(rootDir, 'views', 'shop.html'));
-  // }*/)
-  //   .then(([rows, fieldData]) => {
-  //     templateData = {
-  //       prods: rows,
-  //       pageTitle: "SHOP",
-  //       path: "/"
-  //     };
-  //     // console.log(templateData);
-  //     res.render("shop/index", templateData);
-  //     // res.sendFile(path.join(rootDir, 'views', 'shop.html'));
-  //   })
-  //   .catch(err => {
-  //     console.log(err);
-  //   });
-  Product.findAll()
+  Product.fetchAll()
     .then(products => {
       templateData = {
         prods: products,
         pageTitle: "SHOP",
         path: "/"
       };
-      // console.log(templateData);
       res.render("shop/index", templateData);
     })
     .catch(err => {
