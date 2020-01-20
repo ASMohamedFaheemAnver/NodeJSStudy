@@ -41,7 +41,7 @@ app.set("veiws", "views");
 //   });
 
 app.use(bodyParser.urlencoded({ extended: false }));
-const mongoConnect = require("./util/database");
+const mongoConnect = require("./util/database").mongoConnect;
 
 app.use("/admin", adminRoutes);
 
@@ -53,7 +53,7 @@ app.use(errorsController.pageNotFound);
 
 const PORT = 3000;
 
-mongoConnect(client => {
+mongoConnect(() => {
   app.listen(PORT, () => {
     console.log("Server is running on : localhost:" + PORT);
   });
