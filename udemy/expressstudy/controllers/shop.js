@@ -17,26 +17,10 @@ exports.getProducts = (req, res, next) => {
 
 exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId;
-  // Product.findById(
-  //   prodId /*, product => {
-  //   res.render("shop/product-detail", {
-  //     product: product,
-  //     path: "/products",
-  //     pageTitle: product.title
-  //   });
-  // }*/
-  // )
-  //   .then(([rows, fieldData]) => {
-  //     res.render("shop/product-detail", {
-  //       product: rows[0],
-  //       path: "/products",
-  //       pageTitle: rows[0].title
-  //     });
-  //   })
-  //   .catch();
   Product.findByPk(prodId)
     .then(product => {
       if (!product) {
+        res.redirect("/products");
         return;
       }
       templateData = {

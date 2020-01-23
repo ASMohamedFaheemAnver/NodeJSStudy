@@ -3,7 +3,7 @@ const mongodb = require("mongodb");
 const MongoClient = mongodb.MongoClient;
 let _db;
 const client = new MongoClient(
-  "mongodb+srv://rifa_flover:Ty4wzRMLVJqhP18F@node-zvzjs.mongodb.net/shop?retryWrites=true&w=majority",
+  /*"mongodb+srv://rifa_flover:Ty4wzRMLVJqhP18F@node-zvzjs.mongodb.net/shop?retryWrites=true&w=majority"*/"mongodb://localhost:27017/shop",
   { useUnifiedTopology: true }
 );
 
