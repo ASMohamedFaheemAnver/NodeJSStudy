@@ -1,4 +1,4 @@
-const mongoDb = require('mongodb');
+const mongoDb = require("mongodb");
 const getDb = require("../util/database").getDb;
 
 class Product {
@@ -41,10 +41,36 @@ class Product {
     const db = getDb();
     return db
       .collection("products")
-      .find({_id: new mongoDb.ObjectId(id)})
+      .find({ _id: new mongoDb.ObjectId(id) })
       .next()
       .then(product => {
         return product;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
+  static deleteByPk(id) {
+    const db = getDb();
+    return db
+      .collection("products")
+      .deleteOne({ _id: new mongoDb.ObjectId(id) })
+      .then(res => {
+        // console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
+  static updateByPk(id, updatedData) {
+    const db = getDb();
+    return db
+      .collection("products")
+      .updateOne({ _id: new mongoDb.ObjectId(id) }, {$set: updatedData})
+      .then(res => {
+        // console.log(res);
       })
       .catch(err => {
         console.log(err);
