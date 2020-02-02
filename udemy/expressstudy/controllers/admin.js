@@ -21,7 +21,7 @@ exports.postAddProduct = (req, res, next) => {
   const description = req.body.description;
 
   if (title && imageUrl && price && description) {
-    const product = new Product(title, price, description, imageUrl);
+    const product = new Product(title, price, description, imageUrl, req.user._id);
     return product
       .save()
       .then(_ => {

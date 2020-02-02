@@ -9,6 +9,8 @@ const shopRoutes = require("./routes/shop");
 const path = require("path");
 const errorsController = require("./controllers/errors");
 
+const User = require("./models/user");
+
 // const db = require("./util/database");
 // const hbs = require('express-handlebars');
 
@@ -42,6 +44,17 @@ app.set("veiws", "views");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 const mongoConnect = require("./util/database").mongoConnect;
+
+app.use((req, res, next) => {
+  User.findByPk("5e368c3ce02ebd25a0a1ad9b")
+    .then(user => {
+      req.user = user;
+      next();
+    })
+    .catch(err => {
+      console.log(err);
+    });
+});
 
 app.use("/admin", adminRoutes);
 
