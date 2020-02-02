@@ -48,7 +48,7 @@ const mongoConnect = require("./util/database").mongoConnect;
 app.use((req, res, next) => {
   User.findByPk("5e368c3ce02ebd25a0a1ad9b")
     .then(user => {
-      req.user = user;
+      req.user = new User(user.username, user.email, user.cart, user._id);
       next();
     })
     .catch(err => {
