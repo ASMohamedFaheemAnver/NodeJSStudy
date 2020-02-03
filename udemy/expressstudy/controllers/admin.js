@@ -1,17 +1,12 @@
 const Product = require("../models/product");
 
 exports.getAddProduct = (req, res, next) => {
-  // console.log(errorTracer.lineTracer());
-  // res.sendFile(path.join(rootDir, 'views', 'add-product.pug'));
   templateData = {
     pageTitle: "ADD PRODUCT",
     path: "/admin/add-product",
     editing: false
   };
-  res.render(
-    /*path.join(rootDir, 'views', 'add-product')*/ "admin/edit-product",
-    templateData
-  );
+  res.render("admin/edit-product", templateData);
 };
 
 exports.postAddProduct = (req, res, next) => {
@@ -21,7 +16,15 @@ exports.postAddProduct = (req, res, next) => {
   const description = req.body.description;
 
   if (title && imageUrl && price && description) {
-    const product = new Product(title, price, description, imageUrl, req.user._id);
+    const product = new Product({
+      title: title,
+      price: price,
+      description: description,
+      imageUrl: imageUrl,
+      // we can put req.user, mongoose will take car about id
+      userId: req.user._id
+    });
+
     return product
       .save()
       .then(_ => {
@@ -41,7 +44,7 @@ exports.getEditProduct = (req, res, next) => {
   }
   const prodId = req.params.productId;
 
-  Product.findByPk(prodId)
+  Product.findById(prodId)
     .then(product => {
       if (!product) {
         return res.redirect("/");
@@ -69,12 +72,15 @@ exports.postEditProduct = (req, res, next) => {
   const imageUrl = req.body.imageUrl;
   const description = req.body.description;
 
-  Product.updateByPk(prodId, {
-    title: title,
-    price: price,
-    description: description,
-    imageUrl: imageUrl
-  })
+  Product.updateOne(
+    { _id: prodId },
+    {
+      title: title,
+      price: price,
+      description: description,
+      imageUrl: imageUrl
+    }
+  )
     .then(_ => {
       res.redirect("/admin/products");
     })
@@ -84,7 +90,7 @@ exports.postEditProduct = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll()
+  Product.find()
     .then(products => {
       templateData = {
         prods: products,
@@ -100,7 +106,7 @@ exports.getProducts = (req, res, next) => {
 
 exports.postDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.deleteByPk(prodId)
+  Product.deleteOne({ _id: prodId })
     .then(_ => {
       res.redirect("/admin/products");
     })

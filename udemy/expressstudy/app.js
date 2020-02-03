@@ -21,14 +21,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 const mongoose = require("mongoose");
 
 app.use((req, res, next) => {
-  User.findByPk("5e368c3ce02ebd25a0a1ad9b")
-    .then(user => {
-      req.user = new User(user.username, user.email, user.cart, user._id);
-      next();
-    })
-    .catch(err => {
-      console.log(err);
-    });
+  User.findById("5e37c3da14638353f844a639").then(user => {
+    req.user = user;
+    next();
+  });
 });
 
 app.use("/admin", adminRoutes);
@@ -45,6 +41,17 @@ mongoose
   .connect("mongodb://localhost:27017/shop", {
     useNewUrlParser: true,
     useUnifiedTopology: true
+  })
+  .then(async _ => {
+    const user = await User.findOne();
+    if (!user) {
+      const user_1 = new User({
+        name: "rifa",
+        email: "jstrfaheem065@gmail.com",
+        items: []
+      });
+      return user_1.save();
+    }
   })
   .then(_ => {
     app.listen(PORT, () => {

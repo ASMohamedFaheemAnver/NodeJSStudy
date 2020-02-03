@@ -1,7 +1,9 @@
 const Product = require("../models/product");
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll()
+  Product.find()
+    // .select("title price -_id")
+    // .populate("userId", "name")
     .then(products => {
       templateData = {
         prods: products,
@@ -17,7 +19,7 @@ exports.getProducts = (req, res, next) => {
 
 exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId;
-  Product.findByPk(prodId)
+  Product.findById(prodId)
     .then(product => {
       if (!product) {
         res.redirect("/products");
@@ -36,7 +38,7 @@ exports.getProduct = (req, res, next) => {
 };
 
 exports.getIndex = (req, res, next) => {
-  Product.fetchAll()
+  Product.find()
     .then(products => {
       templateData = {
         prods: products,
@@ -52,12 +54,13 @@ exports.getIndex = (req, res, next) => {
 
 exports.getCart = (req, res, next) => {
   req.user
-    .getCart()
-    .then(products => {
+    .populate("cart.items.productId")
+    .execPopulate()
+    .then(user => {
       res.render("shop/cart", {
         path: "/cart",
         pageTitle: "YOUR CART",
-        products: products
+        products: user.cart.items
       });
     })
     .catch(err => {
@@ -68,7 +71,7 @@ exports.getCart = (req, res, next) => {
 exports.postCart = (req, res, next) => {
   const prodId = req.body.productId;
 
-  Product.findByPk(prodId)
+  Product.findById(prodId)
     .then(product => {
       return req.user.addToCart(product);
     })
@@ -100,7 +103,7 @@ exports.postOrder = (req, res, next) => {
   req.user
     .addOrder()
     .then(_ => {
-      // res.redirect("/orders");
+      res.redirect("/orders");
     })
     .catch(err => {
       console.log(err);
