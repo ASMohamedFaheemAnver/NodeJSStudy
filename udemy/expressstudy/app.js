@@ -21,12 +21,32 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 const mongoose = require("mongoose");
 
+const session = require("express-session");
+
+const MongoDbStore = require("connect-mongodb-session")(session);
+
+const MONGODB_URI = "mongodb://localhost:27017/shop";
+
+const store = new MongoDbStore({
+  uri: MONGODB_URI,
+  collection: "sessions"
+});
+
 app.use((req, res, next) => {
   User.findById("5e37c3da14638353f844a639").then(user => {
     req.user = user;
     next();
   });
 });
+
+app.use(
+  session({
+    secret: "i_use_rifa_to_secure",
+    resave: false,
+    saveUninitialized: false,
+    store: store
+  })
+);
 
 app.use("/admin", adminRoutes);
 
@@ -41,7 +61,7 @@ app.use(errorsController.pageNotFound);
 const PORT = 3000;
 
 mongoose
-  .connect("mongodb://localhost:27017/shop", {
+  .connect(MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
