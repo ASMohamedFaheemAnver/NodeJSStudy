@@ -4,7 +4,8 @@ exports.getAddProduct = (req, res, next) => {
   templateData = {
     pageTitle: "ADD PRODUCT",
     path: "/admin/add-product",
-    editing: false
+    editing: false,
+    isAuthendicated: req.isLoggedIn
   };
   res.render("admin/edit-product", templateData);
 };
@@ -53,7 +54,8 @@ exports.getEditProduct = (req, res, next) => {
         pageTitle: "EDIT PRODUCT",
         path: "/admin/edit-product",
         editing: editMode,
-        product: product
+        product: product,
+        isAuthendicated: req.isLoggedIn
       };
       res.render(
         /*path.join(rootDir, 'views', 'add-product')*/ "admin/edit-product",
@@ -95,7 +97,8 @@ exports.getProducts = (req, res, next) => {
       templateData = {
         prods: products,
         pageTitle: "ADMIN PRODUCTS",
-        path: "/admin/products"
+        path: "/admin/products",
+        isAuthendicated: req.isLoggedIn
       };
       res.render("admin/product-list", templateData);
     })
