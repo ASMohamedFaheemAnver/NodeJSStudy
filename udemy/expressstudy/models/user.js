@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const Order = require("./order");
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
@@ -71,29 +70,37 @@ userSchema.methods.deleteItemFromCart = function(prodId) {
     });
 };
 
-userSchema.methods.addOrder = function() {
-  return this.populate("cart.items.productId")
-    .execPopulate()
-    .then(user => {
-      const items = [];
-      user.cart.items.forEach(p => {
-        const modifiedItem = { product: p.productId, quantity: p.quantity };
-        items.push(modifiedItem);
-      });
-      console.log(items);
-      const order = new Order({
-        items: items,
-        user: {
-          _id: this._id,
-          name: this.name
-        }
-      });
-      return order.save();
-    })
-    .then(_ => {
-      this.cart = { items: [] };
-      return this.save();
+userSchema.methods.clearCart = function() {
+  this.cart.items = [];
+  return this.save()
+    .then()
+    .catch(err => {
+      console.log(err);
     });
 };
+
+// userSchema.methods.addOrder = function() {
+//   return this.populate("cart.items.productId")
+//     .execPopulate()
+//     .then(user => {
+//       const items = [];
+//       user.cart.items.forEach(p => {
+//         const modifiedItem = { product: p.productId, quantity: p.quantity };
+//         items.push(modifiedItem);
+//       });
+//       const order = new Order({
+//         items: items,
+//         user: {
+//           _id: this._id,
+//           name: this.name
+//         }
+//       });
+//       return order.save();
+//     })
+//     .then(_ => {
+//       this.cart = { items: [] };
+//       return this.save();
+//     });
+// };
 
 module.exports = mongoose.model("User", userSchema);

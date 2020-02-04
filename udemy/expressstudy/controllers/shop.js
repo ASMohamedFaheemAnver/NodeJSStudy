@@ -1,4 +1,5 @@
 const Product = require("../models/product");
+const Order = require("../models/order");
 
 exports.getProducts = (req, res, next) => {
   Product.find()
@@ -101,7 +102,27 @@ exports.getCheckout = (req, res, next) => {
 
 exports.postOrder = (req, res, next) => {
   req.user
-    .addOrder()
+    .populate("cart.items.productId")
+    .execPopulate()
+    .then(user => {
+      const product = user.cart.items.map(i => {
+        return { quantity: i.quantity, product: { ...i.productId._doc } };
+      });
+      const order = new Order({
+        user: {
+          name: req.user.name,
+          // mongoose will take care of that
+          _id: req.user
+        },
+        items: product
+      });
+      return order.save();
+    })
+    .then(_ => {
+      // req.user.cart.items = [];
+      // req.user.save();
+      req.user.clearCart();
+    })
     .then(_ => {
       res.redirect("/orders");
     })
@@ -111,8 +132,7 @@ exports.postOrder = (req, res, next) => {
 };
 
 exports.getOrders = (req, res, next) => {
-  req.user
-    .getOrders({ include: ["products"] })
+  Order.find({ "user._id": req.user._id })
     .then(orders => {
       res.render("shop/orders", {
         path: "/orders",
