@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const bcrypt = require("bcryptjs");
 
 exports.getLogin = (req, res, next) => {
   // req.isLoggedIn =
@@ -14,16 +15,34 @@ exports.getLogin = (req, res, next) => {
 };
 
 exports.postLogin = (req, res, next) => {
-  User.findById("5e37c3da14638353f844a639").then(user => {
-    req.session.isLoggedIn = true;
-    req.session.user = user;
-    req.session.save(err => {
-      if (err) {
-        console.log(err);
+  const email = req.body.email;
+  const password = req.body.password;
+  let oUser;
+  User.findOne({ email: email })
+    .then(user => {
+      if (!user) {
+        return res.redirect("/login");
       }
-      res.redirect("/");
+      oUser = user;
+      return bcrypt.compare(password, user.password);
+    })
+    .then(result => {
+      if (!result) {
+        return res.redirect("/login");
+      }
+      req.session.isLoggedIn = true;
+      req.session.user = oUser;
+      req.session.save(err => {
+        if (err) {
+          console.log(err);
+        }
+        res.redirect("/");
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      res.redirect("/login");
     });
-  });
 };
 
 exports.getLogout = (req, res, next) => {
@@ -41,4 +60,32 @@ exports.getSignup = (req, res, next) => {
     pageTitle: "Signup",
     isAuthendicated: req.session.isLoggedIn
   });
+};
+
+exports.postSignup = (req, res, next) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  const confirm_password = req.body.confirm_password;
+  User.findOne({ email: email })
+    .then(user => {
+      if (user) {
+        return res.redirect("/signup");
+      }
+      return bcrypt
+        .hash(password, 12)
+        .then(hashedPassword => {
+          const user_1 = new User({
+            email: email,
+            password: hashedPassword,
+            cart: { items: [] }
+          });
+          return user_1.save();
+        })
+        .then(_ => {
+          res.redirect("/login");
+        });
+    })
+    .catch(err => {
+      console.log(err);
+    });
 };

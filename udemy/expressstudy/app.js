@@ -68,17 +68,17 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
-  .then(async _ => {
-    const user = await User.findOne();
-    if (!user) {
-      const user_1 = new User({
-        name: "rifa",
-        email: "jstrfaheem065@gmail.com",
-        items: []
-      });
-      return user_1.save();
-    }
-  })
+  // .then(async _ => {
+  //   const user = await User.findOne();
+  //   if (!user) {
+  //     const user_1 = new User({
+  //       name: "rifa",
+  //       email: "jstrfaheem065@gmail.com",
+  //       items: []
+  //     });
+  //     return user_1.save();
+  //   }
+  // })
   .then(_ => {
     app.listen(PORT, () => {
       console.log("Server is running on : localhost:" + PORT);
