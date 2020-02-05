@@ -32,13 +32,6 @@ const store = new MongoDbStore({
   collection: "sessions"
 });
 
-app.use((req, res, next) => {
-  User.findById("5e37c3da14638353f844a639").then(user => {
-    req.user = user;
-    next();
-  });
-});
-
 app.use(
   session({
     secret: "i_use_rifa_to_secure",
@@ -47,6 +40,16 @@ app.use(
     store: store
   })
 );
+
+app.use((req, res, next) => {
+  if (req.session.user) {
+    return User.findById(req.session.user._id).then(user => {
+      req.user = user;
+      next();
+    });
+  }
+  next();
+});
 
 app.use("/admin", adminRoutes);
 
