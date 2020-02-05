@@ -10,6 +10,8 @@ const errorsController = require("./controllers/errors");
 
 const User = require("./models/user");
 
+const csrf = require("csurf");
+
 const app = express();
 
 app.set("view engine", "ejs");
@@ -32,6 +34,8 @@ const store = new MongoDbStore({
   collection: "sessions"
 });
 
+const csrfProtection = csrf();
+
 app.use(
   session({
     secret: "i_use_rifa_to_secure",
@@ -41,6 +45,8 @@ app.use(
   })
 );
 
+app.use(csrfProtection);
+
 app.use((req, res, next) => {
   if (req.session.user) {
     return User.findById(req.session.user._id).then(user => {
@@ -48,6 +54,12 @@ app.use((req, res, next) => {
       next();
     });
   }
+  next();
+});
+
+app.use((req, res, next) => {
+  res.locals.isAuthendicated = req.session.isLoggedIn;
+  res.locals.csrfToken = req.csrfToken();
   next();
 });
 

@@ -46,8 +46,7 @@ exports.getIndex = (req, res, next) => {
       templateData = {
         prods: products,
         pageTitle: "SHOP",
-        path: "/",
-        isAuthendicated: req.session.isLoggedIn
+        path: "/"
       };
       res.render("shop/index", templateData);
     })
