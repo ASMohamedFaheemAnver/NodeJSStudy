@@ -17,7 +17,12 @@ exports.postLogin = (req, res, next) => {
   User.findById("5e37c3da14638353f844a639").then(user => {
     req.session.isLoggedIn = true;
     req.session.user = user;
-    res.redirect("/");
+    req.session.save(err => {
+      if (err) {
+        console.log(err);
+      }
+      res.redirect("/");
+    });
   });
 };
 
@@ -27,5 +32,13 @@ exports.getLogout = (req, res, next) => {
       console.log(err);
     }
     res.redirect("/");
+  });
+};
+
+exports.getSignup = (req, res, next) => {
+  res.render("auth/signup", {
+    path: "/signup",
+    pageTitle: "Signup",
+    isAuthendicated: req.session.isLoggedIn
   });
 };
