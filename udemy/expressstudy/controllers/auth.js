@@ -7,36 +7,42 @@ exports.getLogin = (req, res, next) => {
   //     .get("Cookie")
   //     .split(";")[3]
   //     .split("=")[1] === "true";
+  let errorMessage = req.flash("error");
+  if (errorMessage.length > 0) {
+    errorMessage = errorMessage[0];
+  } else {
+    errorMessage = null;
+  }
   res.render("auth/login", {
     path: "/login",
-    pageTitle: "Login",
-    isAuthendicated: req.session.isLoggedIn
+    pageTitle: "LOGIN",
+    errorMessage: errorMessage
   });
 };
 
 exports.postLogin = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
-  let oUser;
   User.findOne({ email: email })
     .then(user => {
       if (!user) {
+        req.flash("error", "Invalid email or password!");
         return res.redirect("/login");
       }
-      oUser = user;
-      return bcrypt.compare(password, user.password);
-    })
-    .then(result => {
-      if (!result) {
-        return res.redirect("/login");
-      }
-      req.session.isLoggedIn = true;
-      req.session.user = oUser;
-      req.session.save(err => {
-        if (err) {
-          console.log(err);
+
+      bcrypt.compare(password, user.password).then(result => {
+        if (!result) {
+          req.flash("error", "Invalid email or password!");
+          return res.redirect("/login");
         }
-        res.redirect("/");
+        req.session.isLoggedIn = true;
+        req.session.user = user;
+        req.session.save(err => {
+          if (err) {
+            console.log(err);
+          }
+          res.redirect("/");
+        });
       });
     })
     .catch(err => {
@@ -55,10 +61,16 @@ exports.getLogout = (req, res, next) => {
 };
 
 exports.getSignup = (req, res, next) => {
+  let errorMessage = req.flash("error");
+  if (errorMessage.length > 0) {
+    errorMessage = errorMessage[0];
+  } else {
+    errorMessage = null;
+  }
   res.render("auth/signup", {
     path: "/signup",
-    pageTitle: "Signup",
-    isAuthendicated: req.session.isLoggedIn
+    pageTitle: "SIGNUP",
+    errorMessage: errorMessage
   });
 };
 
@@ -69,6 +81,7 @@ exports.postSignup = (req, res, next) => {
   User.findOne({ email: email })
     .then(user => {
       if (user) {
+        req.flash("error", "E-mail exist already!");
         return res.redirect("/signup");
       }
       return bcrypt

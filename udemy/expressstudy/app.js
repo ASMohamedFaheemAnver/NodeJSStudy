@@ -12,6 +12,8 @@ const User = require("./models/user");
 
 const csrf = require("csurf");
 
+const flash = require("connect-flash");
+
 const app = express();
 
 app.set("view engine", "ejs");
@@ -35,6 +37,7 @@ const store = new MongoDbStore({
 });
 
 const csrfProtection = csrf();
+app.use(flash());
 
 app.use(
   session({
