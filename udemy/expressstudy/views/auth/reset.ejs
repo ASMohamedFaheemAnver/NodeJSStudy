@@ -12,18 +12,12 @@
       <%= errorMessage %>
     </div>
     <% } %>
-    <form class="login-form" action="/signup" method="POST">
+    <form class="login-form" action="/reset" method="POST">
       <div class="form-control">
         <label for="email">E-Mail</label>
         <input type="email" name="email" id="email">
       </div>
-      <div class="form-control">
-        <label for="imageUrl">Password</label>
-        <input type="password" name="password" id="password">
-        <label for="confirm_password">Confirm Password</label>
-        <input type="password" name="confirm_password" id="confirm_password">
-      </div>
-      <button class="btn" type="submit">Signup</button>
+      <button class="btn" type="submit">Reset password</button>
       <input type="hidden" name="_csrf" value="<%= csrfToken %>">
     </form>
   </main>
