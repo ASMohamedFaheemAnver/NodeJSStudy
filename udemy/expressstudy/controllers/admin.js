@@ -73,7 +73,7 @@ exports.postEditProduct = (req, res, next) => {
   const description = req.body.description;
 
   Product.updateOne(
-    { _id: prodId },
+    { _id: prodId, userId: req.user._id },
     {
       title: title,
       price: price,
@@ -90,7 +90,7 @@ exports.postEditProduct = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  Product.find()
+  Product.find({ userId: req.user._id })
     .then(products => {
       templateData = {
         prods: products,
@@ -106,7 +106,7 @@ exports.getProducts = (req, res, next) => {
 
 exports.postDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.deleteOne({ _id: prodId })
+  Product.deleteOne({ _id: prodId, userId: req.user._id })
     .then(_ => {
       res.redirect("/admin/products");
     })
