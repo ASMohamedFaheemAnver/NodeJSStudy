@@ -2,6 +2,7 @@ const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const sgMail = require("@sendgrid/mail");
 const crypto = require("crypto");
+const { validationResult } = require("express-validator");
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -76,7 +77,16 @@ exports.getSignup = (req, res, next) => {
 exports.postSignup = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
-  const confirm_password = req.body.confirm_password;
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    // console.log(errors.array());
+    return res.status(422).render("auth/signup", {
+      path: "/signup",
+      pageTitle: "SIGNUP",
+      errorMessage: errors.array()[0].msg
+    });
+  }
 
   User.findOne({ email: email })
     .then(user => {
@@ -100,7 +110,7 @@ exports.postSignup = (req, res, next) => {
             to: email,
             from: "rifa@support.com",
             subject: "RiFa shoping side!",
-            html: "<strong>and easy to do anywhere, even with Node.js</strong>"
+            html: "<strong>Signed up success!</strong>"
           };
           return sgMail.send(msg);
         })
