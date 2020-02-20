@@ -67,10 +67,13 @@ exports.getSignup = (req, res, next) => {
   } else {
     errorMessage = null;
   }
+  const errors = validationResult(req);
   res.render("auth/signup", {
     path: "/signup",
     pageTitle: "SIGNUP",
-    errorMessage: errorMessage
+    errorMessage: errorMessage,
+    oldInput: { email: "", password: "", confirmPassword: "" },
+    validationErrors: errors.array()
   });
 };
 
@@ -84,46 +87,53 @@ exports.postSignup = (req, res, next) => {
     return res.status(422).render("auth/signup", {
       path: "/signup",
       pageTitle: "SIGNUP",
-      errorMessage: errors.array()[0].msg
+      errorMessage: errors.array()[0].msg,
+      oldInput: {
+        email: email,
+        password,
+        password,
+        confirmPassword: req.body.confirmPassword
+      },
+      validationErrors: errors.array()
     });
   }
 
-  User.findOne({ email: email })
-    .then(user => {
-      if (user) {
-        req.flash("error", "E-mail exist already!");
-        return res.redirect("/signup");
-      }
-      return bcrypt
-        .hash(password, 12)
-        .then(hashedPassword => {
-          const user_1 = new User({
-            email: email,
-            password: hashedPassword,
-            cart: { items: [] }
-          });
-          return user_1.save();
-        })
-        .then(_ => {
-          res.redirect("/login");
-          const msg = {
-            to: email,
-            from: "rifa@support.com",
-            subject: "RiFa shoping side!",
-            html: "<strong>Signed up success!</strong>"
-          };
-          return sgMail.send(msg);
-        })
-        .then(result => {
-          // console.log(result);
-        })
-        .catch(err => {
-          console.log(err);
-        });
+  // User.findOne({ email: email })
+  //   .then(user => {
+  //     if (user) {
+  //       req.flash("error", "E-mail exist already, please use another email!");
+  //       return res.redirect("/signup");
+  //     }
+  bcrypt
+    .hash(password, 12)
+    .then(hashedPassword => {
+      const user_1 = new User({
+        email: email,
+        password: hashedPassword,
+        cart: { items: [] }
+      });
+      return user_1.save();
+    })
+    .then(_ => {
+      res.redirect("/login");
+      const msg = {
+        to: email,
+        from: "rifa@support.com",
+        subject: "RiFa shoping side!",
+        html: "<strong>Signed up success!</strong>"
+      };
+      return sgMail.send(msg);
+    })
+    .then(result => {
+      // console.log(result);
     })
     .catch(err => {
       console.log(err);
     });
+  // })
+  // .catch(err => {
+  //   console.log(err);
+  // });
 };
 
 exports.getReset = (req, res, next) => {
