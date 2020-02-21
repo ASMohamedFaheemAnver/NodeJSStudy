@@ -1,10 +1,14 @@
 const Product = require("../models/product");
 
+const { validationResult } = require("express-validator");
+
 exports.getAddProduct = (req, res, next) => {
   templateData = {
     pageTitle: "ADD PRODUCT",
     path: "/admin/add-product",
-    editing: false
+    editing: false,
+    hasError: false,
+    errorMessage: null
   };
   res.render("admin/edit-product", templateData);
 };
@@ -15,26 +19,40 @@ exports.postAddProduct = (req, res, next) => {
   const price = req.body.price;
   const description = req.body.description;
 
-  if (title && imageUrl && price && description) {
-    const product = new Product({
-      title: title,
-      price: price,
-      description: description,
-      imageUrl: imageUrl,
-      // we can put req.user, mongoose will take car about id
-      userId: req.user._id
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).render("admin/edit-product", {
+      pageTitle: "ADD PRODUCT",
+      path: "/admin/edit-product",
+      editing: false,
+      hasError: true,
+      product: {
+        title: title,
+        imageUrl: imageUrl,
+        price: price,
+        description: description
+      },
+      errorMessage: errors.array()[0].msg
     });
-
-    return product
-      .save()
-      .then(_ => {
-        res.redirect("/");
-      })
-      .catch(err => {
-        console.log(err);
-      });
   }
-  res.send("<p>PLEASE ENTER DATA TO SUBMIT!</p>");
+
+  const product = new Product({
+    title: title,
+    price: price,
+    description: description,
+    imageUrl: imageUrl,
+    // we can put req.user, mongoose will take car about id
+    userId: req.user._id
+  });
+
+  return product
+    .save()
+    .then(_ => {
+      res.redirect("/");
+    })
+    .catch(err => {
+      console.log(err);
+    });
 };
 
 exports.getEditProduct = (req, res, next) => {
@@ -53,7 +71,9 @@ exports.getEditProduct = (req, res, next) => {
         pageTitle: "EDIT PRODUCT",
         path: "/admin/edit-product",
         editing: editMode,
-        product: product
+        product: product,
+        hasError: false,
+        errorMessage: null
       };
       res.render(
         /*path.join(rootDir, 'views', 'add-product')*/ "admin/edit-product",
@@ -72,6 +92,23 @@ exports.postEditProduct = (req, res, next) => {
   const imageUrl = req.body.imageUrl;
   const description = req.body.description;
 
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).render("admin/edit-product", {
+      pageTitle: "EDIT PRODUCT",
+      path: "/admin/edit-product",
+      editing: true,
+      hasError: false,
+      product: {
+        title: title,
+        imageUrl: imageUrl,
+        price: price,
+        description: description,
+        _id: prodId
+      },
+      errorMessage: errors.array()[0].msg
+    });
+  }
   Product.updateOne(
     { _id: prodId, userId: req.user._id },
     {
