@@ -9,7 +9,22 @@ const User = require("../models/user");
 
 router.get("/login", authController.getLogin);
 
-router.post("/login", authController.postLogin);
+router.post(
+  "/login",
+  [
+    check("email")
+      .isEmail()
+      .withMessage("Please enter a vaild email!")
+      .custom((value, { req }) => {
+        return User.findOne({ email: value }).then(user => {
+          if (!user) {
+            return Promise.reject("Invalid email!");
+          }
+        });
+      })
+  ],
+  authController.postLogin
+);
 
 router.post("/logout", authController.getLogout);
 

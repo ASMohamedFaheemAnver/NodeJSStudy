@@ -16,24 +16,48 @@ exports.getLogin = (req, res, next) => {
   res.render("auth/login", {
     path: "/login",
     pageTitle: "LOGIN",
-    errorMessage: errorMessage
+    errorMessage: errorMessage,
+    oldInput: {
+      email: "",
+      password: ""
+    },
+    validationErrors: []
   });
 };
 
 exports.postLogin = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    // console.log(errors.array());
+    return res.status(422).render("auth/login", {
+      path: "/login",
+      pageTitle: "LOGIN",
+      errorMessage: errors.array()[0].msg,
+      oldInput: {
+        email: email,
+        password: password
+      },
+      validationErrors: errors.array()
+    });
+  }
+
   User.findOne({ email: email })
     .then(user => {
-      if (!user) {
-        req.flash("error", "Invalid email or password!");
-        return res.redirect("/login");
-      }
-
       bcrypt.compare(password, user.password).then(result => {
         if (!result) {
-          req.flash("error", "Invalid email or password!");
-          return res.redirect("/login");
+          return res.status(422).render("auth/login", {
+            path: "/login",
+            pageTitle: "LOGIN",
+            errorMessage: "Entered password is incorrect!",
+            oldInput: {
+              email: email,
+              password: password
+            },
+            validationErrors: [{ param: "password" }]
+          });
         }
         req.session.isLoggedIn = true;
         req.session.user = user;
@@ -90,8 +114,7 @@ exports.postSignup = (req, res, next) => {
       errorMessage: errors.array()[0].msg,
       oldInput: {
         email: email,
-        password,
-        password,
+        password: password,
         confirmPassword: req.body.confirmPassword
       },
       validationErrors: errors.array()
