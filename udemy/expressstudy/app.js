@@ -48,21 +48,29 @@ app.use(
   })
 );
 
+app.use(express.static(path.join(__dirname, "public")));
 app.use(csrfProtection);
-
-app.use((req, res, next) => {
-  if (req.session.user) {
-    return User.findById(req.session.user._id).then(user => {
-      req.user = user;
-      next();
-    });
-  }
-  next();
-});
 
 app.use((req, res, next) => {
   res.locals.isAuthendicated = req.session.isLoggedIn;
   res.locals.csrfToken = req.csrfToken();
+  next();
+});
+
+app.use((req, res, next) => {
+  if (req.session.user) {
+    return User.findById(req.session.user._id)
+      .then(user => {
+        if (!user) {
+          return next();
+        }
+        req.user = user;
+        next();
+      })
+      .catch(err => {
+        next(new Error(err));
+      });
+  }
   next();
 });
 
@@ -72,9 +80,16 @@ app.use(shopRoutes);
 
 app.use(authRoutes);
 
-app.use(express.static(path.join(__dirname, "public")));
-
+app.get("/500", errorsController.internalServerError);
 app.use(errorsController.pageNotFound);
+
+app.use((error, req, res, next) => {
+  res.status(500).render("500", {
+    pageTitle: "INTERNAL SERVER ERROR!",
+    path: "/page-not-found",
+    isAuthendicated: req.session.isLoggedIn
+  });
+});
 
 const PORT = 3000;
 
