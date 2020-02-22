@@ -13,6 +13,7 @@ const User = require("./models/user");
 const csrf = require("csurf");
 
 const flash = require("connect-flash");
+const multer = require("multer");
 
 const app = express();
 
@@ -21,8 +22,31 @@ app.set("view engine", "ejs");
 // Where we can find the dynamic html files
 app.set("veiws", "views");
 
-app.use(bodyParser.urlencoded({ extended: false }));
+const fileStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "images");
+  },
+  filename: (req, file, cb) => {
+    cb(null, new Date().toISOString() + "|" + file.originalname.toLowerCase());
+  }
+});
 
+const fileFilter = (req, file, cb) => {
+  if (
+    file.mimetype === "image/png" ||
+    file.mimetype === "image/jpg" ||
+    file.mimetype === "image/jpeg"
+  ) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(
+  multer({ storage: fileStorage, fileFilter: fileFilter }).single("image")
+);
 const mongoose = require("mongoose");
 
 const session = require("express-session");
@@ -49,6 +73,7 @@ app.use(
 );
 
 app.use(express.static(path.join(__dirname, "public")));
+app.use("/images", express.static(path.join(__dirname, "images")));
 app.use(csrfProtection);
 
 app.use((req, res, next) => {
@@ -68,6 +93,7 @@ app.use((req, res, next) => {
         next();
       })
       .catch(err => {
+        console.log(err);
         next(new Error(err));
       });
   }
@@ -84,6 +110,7 @@ app.get("/500", errorsController.internalServerError);
 app.use(errorsController.pageNotFound);
 
 app.use((error, req, res, next) => {
+  console.log(error);
   res.status(500).render("500", {
     pageTitle: "INTERNAL SERVER ERROR!",
     path: "/page-not-found",
