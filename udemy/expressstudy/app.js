@@ -87,7 +87,8 @@ app.use((error, req, res, next) => {
   res.status(500).render("500", {
     pageTitle: "INTERNAL SERVER ERROR!",
     path: "/page-not-found",
-    isAuthendicated: req.session.isLoggedIn
+    isAuthendicated: req.session.isLoggedIn,
+    csrfToken: req.csrfToken()
   });
 });
 

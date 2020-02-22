@@ -23,7 +23,6 @@ router.post(
       .isAlphanumeric()
       .isLength({ min: 3 })
       .trim(),
-    body("imageUrl").isURL(),
     body("price").isNumeric(),
     body("description")
       .isLength({ min: 5, max: 400 })
@@ -42,7 +41,6 @@ router.post(
       .isAlphanumeric()
       .isLength({ min: 3 })
       .trim(),
-    body("imageUrl").isURL(),
     body("price").isNumeric(),
     body("description")
       .isLength({ min: 5, max: 400 })
