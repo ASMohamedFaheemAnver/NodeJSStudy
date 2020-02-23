@@ -2,6 +2,8 @@ const Product = require("../models/product");
 
 const { validationResult } = require("express-validator");
 
+const fileHelper = require("../util/file");
+
 exports.getAddProduct = (req, res, next) => {
   templateData = {
     pageTitle: "ADD PRODUCT",
@@ -149,6 +151,13 @@ exports.postEditProduct = (req, res, next) => {
   let updatedData;
 
   if (image) {
+    Product.findOne({ _id: prodId, userId: req.user._id })
+      .then(p => {
+        fileHelper.deleteFile(p.imageUrl);
+      })
+      .catch(err => {
+        next(err);
+      });
     updatedData = {
       title: title,
       price: price,
@@ -195,7 +204,11 @@ exports.getProducts = (req, res, next) => {
 
 exports.postDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.deleteOne({ _id: prodId, userId: req.user._id })
+  Product.findOne({ _id: prodId, userId: req.user._id })
+    .then(prod => {
+      fileHelper.deleteFile(prod.imageUrl);
+      return prod.delete();
+    })
     .then(_ => {
       res.redirect("/admin/products");
     })
@@ -205,4 +218,14 @@ exports.postDeleteProduct = (req, res, next) => {
       error.httpStatusCode = 500;
       return next(error);
     });
+  // Product.deleteOne({ _id: prodId, userId: req.user._id })
+  //   .then(_ => {
+  //     res.redirect("/admin/products");
+  //   })
+  //   .catch(err => {
+  //     console.log(err);
+  //     const error = new Error(err);
+  //     error.httpStatusCode = 500;
+  //     return next(error);
+  //   });
 };
