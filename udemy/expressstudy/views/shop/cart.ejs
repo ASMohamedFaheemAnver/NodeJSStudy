@@ -20,14 +20,34 @@
             <% }) %>
         </ul>
         <hr>
-        <div class="centered">
+        <br>
+        <!-- <div class="centered">
             <form action="/create-order" method="POST">
                 <button type="submit" class="btn">Order now!</button>
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            </form>
+        </div> -->
+        <div class="centered" style="width: 50%; display: block; margin: auto;">
+            <form action="/create-order" method="post" id="payment-form">
+                <div class="form-row">
+                    <label for="card-element">
+                        Credit or debit card
+                    </label>
+                    <div id="card-element">
+                        <!-- A Stripe Element will be inserted here. -->
+                    </div>
+        
+                    <!-- Used to display form errors. -->
+                    <div id="card-errors" role="alert"></div>
+                </div>
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <button style="margin: 1rem;" class="btn">Submit Payment</button>
             </form>
         </div>
         <% }else{ %>
         <p>NO PRODUCTS IN CART!</p>
         <% } %>
+        <script src="https://js.stripe.com/v3/"></script>
+        <script src="/js/stripe.js"></script>
     </main>
     <%- include('../includes/end.ejs') %>

@@ -3,6 +3,7 @@ const Order = require("../models/order");
 const fs = require("fs");
 const path = require("path");
 const PDFDocument = require("pdfkit");
+const stripe = require("stripe")(process.stripe);
 
 const ITEMS_PER_PAGE = 1;
 
@@ -152,10 +153,15 @@ exports.getCheckout = (req, res, next) => {
 };
 
 exports.postOrder = (req, res, next) => {
+  let total = 0;
   req.user
     .populate("cart.items.productId")
     .execPopulate()
     .then(user => {
+      user.cart.items.forEach(p => {
+        total += p.quantity * p.productId.price;
+      });
+
       const product = user.cart.items.map(i => {
         return { quantity: i.quantity, product: { ...i.productId._doc } };
       });
@@ -172,7 +178,19 @@ exports.postOrder = (req, res, next) => {
     .then(_ => {
       // req.user.cart.items = [];
       // req.user.save();
-      req.user.clearCart();
+      stripe.paymentIntents
+        .create({
+          amount: total * 100,
+          currency: "usd",
+          description: "A demo nodejs payment!"
+          // payment_method: "card_1GFfThIW47ITkVAX1Ety3ygc"
+        })
+        .then(result => {
+          req.user.clearCart();
+        })
+        .catch(err => {
+          console.log(err);
+        });
     })
     .then(_ => {
       res.redirect("/orders");
