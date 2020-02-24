@@ -5,6 +5,8 @@ const feedRoutes = require("./routes/feed");
 
 const mongoose = require("mongoose");
 
+const path = require("path");
+
 const app = express();
 
 app.use((req, res, next) => {
@@ -20,7 +22,17 @@ app.use((req, res, next) => {
 // app.use(bodyParser.urlencoded()); // x-www.form-urlencoded
 app.use(bodyParser.json()); // application/json
 
+app.use("/images", express.static(path.join(__dirname, "images")));
+
 app.use("/feed", feedRoutes);
+
+app.use((error, req, res, next) => {
+  console.log(error);
+  const status = error.statusCode;
+  const messages = error.messages;
+
+  res.status(status).json({ messages: messages });
+});
 
 mongoose
   .connect("mongodb://localhost:27017/messages", {
