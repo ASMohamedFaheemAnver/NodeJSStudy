@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const feedRoutes = require("./routes/feed");
+const authRoutes = require("./routes/auth");
 
 const mongoose = require("mongoose");
 
@@ -52,13 +53,14 @@ app.use(
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 app.use("/feed", feedRoutes);
+app.use("/auth", authRoutes);
 
 app.use((error, req, res, next) => {
   console.log(error);
   const status = error.statusCode;
   const messages = error.messages;
-
-  res.status(status).json({ messages: messages });
+  const data = error.data;
+  res.status(status).json({ messages: messages, data: data });
 });
 
 mongoose
