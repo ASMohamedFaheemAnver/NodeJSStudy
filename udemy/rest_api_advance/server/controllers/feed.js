@@ -6,9 +6,24 @@ const fs = require("fs");
 const path = require("path");
 
 exports.getPosts = (req, res, next) => {
+  const perPage = 2;
+  const currentPost = req.query.page || 1;
+  let totalItems;
+
   Post.find()
+    .countDocuments()
+    .then(count => {
+      totalItems = count;
+      return Post.find()
+        .skip((currentPost - 1) * perPage)
+        .limit(perPage);
+    })
     .then(posts => {
-      res.status(200).json({ message: "Fetched posts!", posts: posts });
+      res.status(200).json({
+        message: "Fetched posts!",
+        posts: posts,
+        totalItems: totalItems
+      });
     })
     .catch(err => {
       if (!err.statusCode) {
@@ -89,20 +104,20 @@ exports.updatePost = (req, res, next) => {
     error.statusCode = 422;
     throw error;
   }
-
   const postId = req.params.postId;
   const title = req.body.title;
   const content = req.body.content;
-  let imageUrl = req.body.image;
+  let imageUrl = null;
 
   if (req.file) {
     imageUrl = req.file.path;
   }
-  if (!imageUrl) {
-    const error = new Error("No file picked!");
-    error.statusCode = 422;
-    throw error;
-  }
+
+  // if (!imageUrl) {
+  //   const error = new Error("No file picked!");
+  //   error.statusCode = 422;
+  //   throw error;
+  // }
 
   Post.findById(postId)
     .then(post => {
@@ -111,6 +126,11 @@ exports.updatePost = (req, res, next) => {
         error.statusCode = 400;
         throw error;
       }
+
+      if (!imageUrl) {
+        imageUrl = post.imageUrl;
+      }
+
       if (imageUrl !== post.imageUrl) {
         clearImage(post.imageUrl);
       }
