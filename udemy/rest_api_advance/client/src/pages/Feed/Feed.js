@@ -108,22 +108,21 @@ class Feed extends Component {
       editLoading: true
     });
     // Set up data (with image!)
+    const formData = new FormData();
+    formData.append("title", postData.title);
+    formData.append("content", postData.content);
+    formData.append("image", postData.image);
+
     let url = "http://localhost:8080/feed/post";
     let method = "POST";
     if (this.state.editPost) {
       url = "http://localhost:8080/feed/post/" + this.state.editPost._id;
       method = "PUT";
     }
+
     fetch(url, {
       method: method,
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        title: postData.title,
-        content: postData.content,
-        image: postData.image
-      })
+      body: formData
     })
       .then(res => {
         if (res.status !== 200 && res.status !== 201) {

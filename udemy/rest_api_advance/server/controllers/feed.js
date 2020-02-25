@@ -32,10 +32,18 @@ exports.createPost = (req, res, next) => {
   const title = req.body.title;
   const content = req.body.content;
 
+  if (!req.file) {
+    const error = new Error("No image provided!");
+    error.statusCode = 422;
+    throw error;
+  }
+
+  const imageUrl = req.file.path;
+
   const post = new Post({
     title: title,
     content: content,
-    imageUrl: "images/84208556_554391971825327_5409517833367322624_n.jpg",
+    imageUrl: imageUrl,
     creator: { name: "AS MOHAMED FAHEEM ANVER" }
   });
 
