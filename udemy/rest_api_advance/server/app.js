@@ -73,9 +73,9 @@ mongoose
     const server = app.listen(8080, () => {
       console.log("Server is running on localhost:" + 8080);
     });
-    const io = require("socket.io")(server);
+    const io = require("./socket").init(server);
     io.on("connection", socket => {
-      console.log("Client connected!");
+      console.log("+1");
     });
   })
   .catch(err => {
