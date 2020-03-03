@@ -239,6 +239,38 @@ module.exports = {
       updatedAt: updatedPost.updatedAt.toISOString(),
       createdAt: updatedPost.createdAt.toISOString()
     };
+  },
+
+  deletePost: async function({ id }, req) {
+    if (!req.isAuth) {
+      const error = new Error("Not authenticated!");
+      error.code = 401;
+      throw error;
+    }
+
+    const post = await Post.findById(id).populate("creator");
+    if (!post) {
+      const error = new Error("No post found!");
+      error.code = 404;
+      throw error;
+    }
+
+    if (post.creator._id.toString() !== req.userId.toString()) {
+      const error = new Error("Not authenticated!");
+      error.code = 403;
+      throw error;
+    }
+
+    const creator = await User.findById(post.creator._id);
+    creator.posts = creator.posts.filter(p => {
+      return p.toString() !== id.toString();
+    });
+
+    await creator.save();
+
+    clearImage(post.imageUrl);
+    await post.delete();
+    return true;
   }
 };
 
