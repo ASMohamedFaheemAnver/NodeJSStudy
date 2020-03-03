@@ -202,6 +202,26 @@ class Feed extends Component {
       `
         };
 
+        if (this.state.editPost) {
+          graphqlQuery = {
+            query: `
+        mutation {
+          updatePost(id: "${this.state.editPost._id}", postInput: {title: "${postData.title}", content: "${postData.content}", 
+          imageUrl: "${imageUrl}"}) {
+            _id
+            title
+            content
+            imageUrl
+            creator {
+              name
+            }
+            createdAt
+          }
+        }
+      `
+          };
+        }
+        console.log(graphqlQuery);
         return fetch("http://localhost:8080/graphql", {
           method: "POST",
           body: JSON.stringify(graphqlQuery),
@@ -215,6 +235,7 @@ class Feed extends Component {
         return res.json();
       })
       .then(resData => {
+        console.log(resData);
         if (resData.errors && resData.errors[0].status === 422) {
           throw new Error(
             "Validation failed. Make sure the email address isn't used yet!"
@@ -225,14 +246,28 @@ class Feed extends Component {
           throw Error("User login failed!");
         }
         console.log(resData);
-        const post = {
-          _id: resData.data.createPost._id,
-          title: resData.data.createPost.title,
-          content: resData.data.createPost.content,
-          creator: resData.data.createPost.creator,
-          createdAt: resData.data.createPost.createdAt,
-          imagePath: resData.data.createPost.imageUrl
-        };
+        let post;
+
+        if (this.state.editPost) {
+          post = {
+            _id: resData.data.updatePost._id,
+            title: resData.data.updatePost.title,
+            content: resData.data.updatePost.content,
+            creator: resData.data.updatePost.creator,
+            createdAt: resData.data.updatePost.createdAt,
+            imagePath: resData.data.updatePost.imageUrl
+          };
+        } else {
+          post = {
+            _id: resData.data.createPost._id,
+            title: resData.data.createPost.title,
+            content: resData.data.createPost.content,
+            creator: resData.data.createPost.creator,
+            createdAt: resData.data.createPost.createdAt,
+            imagePath: resData.data.createPost.imageUrl
+          };
+        }
+
         this.setState(prevState => {
           let updatedPosts = [...prevState.posts];
           if (prevState.editPost) {
