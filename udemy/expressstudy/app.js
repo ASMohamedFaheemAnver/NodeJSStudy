@@ -5,6 +5,8 @@ const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const authRoutes = require("./routes/auth");
 
+const fs = require("fs");
+
 const path = require("path");
 const errorsController = require("./controllers/errors");
 
@@ -28,7 +30,7 @@ const fileStorage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     cb(null, new Date().toISOString() + "|" + file.originalname.toLowerCase());
-  }
+  },
 });
 
 const fileFilter = (req, file, cb) => {
@@ -57,7 +59,7 @@ const MONGODB_URI = "mongodb://localhost:27017/shop";
 
 const store = new MongoDbStore({
   uri: MONGODB_URI,
-  collection: "sessions"
+  collection: "sessions",
 });
 
 const csrfProtection = csrf();
@@ -68,7 +70,7 @@ app.use(
     secret: "i_use_rifa_to_secure",
     resave: false,
     saveUninitialized: false,
-    store: store
+    store: store,
   })
 );
 
@@ -85,14 +87,14 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   if (req.session.user) {
     return User.findById(req.session.user._id)
-      .then(user => {
+      .then((user) => {
         if (!user) {
           return next();
         }
         req.user = user;
         next();
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
         next(new Error(err));
       });
@@ -114,8 +116,8 @@ app.use((error, req, res, next) => {
   res.status(500).render("500", {
     pageTitle: "INTERNAL SERVER ERROR!",
     path: "/page-not-found",
-    isAuthendicated: req.session.isLoggedIn,
-    csrfToken: req.csrfToken()
+    isAuthendicated: req.session ? req.session.isLoggedIn : false,
+    csrfToken: req.csrfToken(),
   });
 });
 
@@ -124,7 +126,7 @@ const PORT = 3000;
 mongoose
   .connect(MONGODB_URI, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
   })
   // .then(async _ => {
   //   const user = await User.findOne();
@@ -137,11 +139,15 @@ mongoose
   //     return user_1.save();
   //   }
   // })
-  .then(_ => {
+  .then((_) => {
+    const dir = path.join(__dirname, "images");
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir);
+    }
     app.listen(PORT, () => {
       console.log("Server is running on : localhost:" + PORT);
     });
   })
-  .catch(err => {
+  .catch((err) => {
     console.log(err);
   });

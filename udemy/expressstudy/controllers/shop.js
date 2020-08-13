@@ -3,16 +3,16 @@ const Order = require("../models/order");
 const fs = require("fs");
 const path = require("path");
 const PDFDocument = require("pdfkit");
-const stripe = require("stripe")(process.stripe);
+const stripe = require("stripe")(process.env.stripe);
 
-const ITEMS_PER_PAGE = 1;
+const ITEMS_PER_PAGE = 2;
 
 exports.getProducts = (req, res, next) => {
   let page = +req.query.page || 1;
   let count;
   Product.find()
     .countDocuments()
-    .then(numberOfProduct => {
+    .then((numberOfProduct) => {
       count = numberOfProduct;
       return Product.find()
         .skip((page - 1) * ITEMS_PER_PAGE)
@@ -20,7 +20,7 @@ exports.getProducts = (req, res, next) => {
     })
     // .select("title price -_id")
     // .populate("userId", "name")
-    .then(products => {
+    .then((products) => {
       templateData = {
         prods: products,
         pageTitle: "ALL PRODUCTS",
@@ -30,11 +30,11 @@ exports.getProducts = (req, res, next) => {
         hasPrevious: page > 1,
         nextPage: parseInt(page) + 1,
         previousPage: page - 1,
-        lastPage: Math.ceil(count / ITEMS_PER_PAGE)
+        lastPage: Math.ceil(count / ITEMS_PER_PAGE),
       };
       res.render("shop/product-list", templateData);
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       const error = new Error(err);
       error.httpStatusCode = 500;
@@ -45,7 +45,7 @@ exports.getProducts = (req, res, next) => {
 exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId;
   Product.findById(prodId)
-    .then(product => {
+    .then((product) => {
       if (!product) {
         res.redirect("/products");
         return;
@@ -53,11 +53,11 @@ exports.getProduct = (req, res, next) => {
       templateData = {
         product: product,
         path: "/products",
-        pageTitle: product.title
+        pageTitle: product.title,
       };
       res.render("shop/product-detail", templateData);
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       const error = new Error(err);
       error.httpStatusCode = 500;
@@ -70,13 +70,13 @@ exports.getIndex = (req, res, next) => {
   let count;
   Product.find()
     .countDocuments()
-    .then(numberOfProduct => {
+    .then((numberOfProduct) => {
       count = numberOfProduct;
       return Product.find()
         .skip((page - 1) * ITEMS_PER_PAGE)
         .limit(ITEMS_PER_PAGE);
     })
-    .then(products => {
+    .then((products) => {
       templateData = {
         prods: products,
         pageTitle: "SHOP",
@@ -86,12 +86,12 @@ exports.getIndex = (req, res, next) => {
         hasPrevious: page > 1,
         nextPage: parseInt(page) + 1,
         previousPage: page - 1,
-        lastPage: Math.ceil(count / ITEMS_PER_PAGE)
+        lastPage: Math.ceil(count / ITEMS_PER_PAGE),
       };
 
       res.render("shop/index", templateData);
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       const error = new Error(err);
       error.httpStatusCode = 500;
@@ -103,14 +103,14 @@ exports.getCart = (req, res, next) => {
   req.user
     .populate("cart.items.productId")
     .execPopulate()
-    .then(user => {
+    .then((user) => {
       res.render("shop/cart", {
         path: "/cart",
         pageTitle: "YOUR CART",
-        products: user.cart.items
+        products: user.cart.items,
       });
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       const error = new Error(err);
       error.httpStatusCode = 500;
@@ -122,10 +122,10 @@ exports.postCart = (req, res, next) => {
   const prodId = req.body.productId;
 
   Product.findById(prodId)
-    .then(product => {
+    .then((product) => {
       return req.user.addToCart(product);
     })
-    .then(_ => {
+    .then((_) => {
       res.redirect("/cart");
     });
 };
@@ -134,10 +134,10 @@ exports.postCartDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
   req.user
     .deleteItemFromCart(prodId)
-    .then(_ => {
+    .then((_) => {
       res.redirect("/cart");
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       const error = new Error(err);
       error.httpStatusCode = 500;
@@ -148,7 +148,7 @@ exports.postCartDeleteProduct = (req, res, next) => {
 exports.getCheckout = (req, res, next) => {
   res.render("shop/checkout", {
     path: "/checkout",
-    pageTitle: "CHECKOUT"
+    pageTitle: "CHECKOUT",
   });
 };
 
@@ -157,45 +157,45 @@ exports.postOrder = (req, res, next) => {
   req.user
     .populate("cart.items.productId")
     .execPopulate()
-    .then(user => {
-      user.cart.items.forEach(p => {
+    .then((user) => {
+      user.cart.items.forEach((p) => {
         total += p.quantity * p.productId.price;
       });
 
-      const product = user.cart.items.map(i => {
+      const product = user.cart.items.map((i) => {
         return { quantity: i.quantity, product: { ...i.productId._doc } };
       });
       const order = new Order({
         user: {
           email: req.user.email,
           // mongoose will take care of that
-          _id: req.user
+          _id: req.user,
         },
-        items: product
+        items: product,
       });
       return order.save();
     })
-    .then(_ => {
+    .then((_) => {
       // req.user.cart.items = [];
       // req.user.save();
       stripe.paymentIntents
         .create({
           amount: total * 100,
           currency: "usd",
-          description: "A demo nodejs payment!"
+          description: "A demo nodejs payment!",
           // payment_method: "card_1GFfThIW47ITkVAX1Ety3ygc"
         })
-        .then(result => {
+        .then((result) => {
           req.user.clearCart();
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     })
-    .then(_ => {
+    .then((_) => {
       res.redirect("/orders");
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       const error = new Error(err);
       error.httpStatusCode = 500;
@@ -205,14 +205,14 @@ exports.postOrder = (req, res, next) => {
 
 exports.getOrders = (req, res, next) => {
   Order.find({ "user._id": req.user._id })
-    .then(orders => {
+    .then((orders) => {
       res.render("shop/orders", {
         path: "/orders",
         pageTitle: "YOUR ORDERS",
-        orders: orders
+        orders: orders,
       });
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       const error = new Error(err);
       error.httpStatusCode = 500;
@@ -225,7 +225,7 @@ exports.getInvoice = (req, res, next) => {
   const invoiceName = orderId + ".pdf";
   const invoicePath = path.join("data", "invoices", invoiceName);
   Order.findById(orderId)
-    .then(order => {
+    .then((order) => {
       if (!order) {
         return next(new Error("No order found!"));
       }
@@ -246,7 +246,7 @@ exports.getInvoice = (req, res, next) => {
       // pdfDoc.text("INVOICE!");
       pdfDoc.fontSize(11).text("INVOICE!", { underline: true });
       let totalPrice = 0;
-      order.items.forEach(prod => {
+      order.items.forEach((prod) => {
         totalPrice += prod.quantity * prod.product.price;
         pdfDoc.text(
           prod.product.title +
@@ -282,7 +282,7 @@ exports.getInvoice = (req, res, next) => {
       // );
       // file.pipe(res);
     })
-    .catch(err => {
+    .catch((err) => {
       next(err);
     });
 };

@@ -23,7 +23,7 @@ const fileStorage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     cb(null, new Date().toISOString() + "|" + file.originalname);
-  }
+  },
 });
 
 const fileFilter = (req, file, cb) => {
@@ -95,7 +95,7 @@ app.use(
       const message = err.message || "An error occured!";
       const code = err.originalError.code || 500;
       return { message: message, status: code, data: data };
-    }
+    },
   })
 );
 
@@ -111,13 +111,17 @@ mongoose
   .connect("mongodb://localhost:27017/messages", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useFindAndModify: false
+    useFindAndModify: false,
   })
-  .then(_ => {
+  .then((_) => {
+    const dir = path.join(__dirname, "images");
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir);
+    }
     app.listen(8080, () => {
       console.log("Server is running on localhost:" + 8080);
     });
   })
-  .catch(err => {
+  .catch((err) => {
     console.log(err);
   });

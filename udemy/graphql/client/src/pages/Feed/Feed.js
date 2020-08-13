@@ -18,7 +18,7 @@ class Feed extends Component {
     status: "",
     postPage: 1,
     postsLoading: true,
-    editLoading: false
+    editLoading: false,
   };
 
   componentDidMount() {
@@ -33,23 +33,25 @@ class Feed extends Component {
             }
           }
         }
-      `
+      `,
     };
     fetch("http://localhost:8080/graphql", {
       body: JSON.stringify(graphqlQuery),
       method: "POST",
       headers: {
         Authorizaition: "Bearer " + this.props.token,
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     })
-      .then(res => {
+      .then((res) => {
         return res.json();
       })
-      .then(resData => {
+      .then((resData) => {
         console.log(resData);
         this.setState({
-          status: resData.data.getPosts.posts[0].creator.status
+          status: resData.data.getPosts.posts[0]
+            ? resData.data.getPosts.posts[0].creator.status
+            : {},
         });
       })
       .catch(this.catchError);
@@ -57,7 +59,7 @@ class Feed extends Component {
     this.loadPosts();
   }
 
-  loadPosts = direction => {
+  loadPosts = (direction) => {
     if (direction) {
       this.setState({ postsLoading: true, posts: [] });
     }
@@ -87,51 +89,51 @@ class Feed extends Component {
             totalPosts
           }
         }
-      `
+      `,
     };
     fetch("http://localhost:8080/graphql", {
       body: JSON.stringify(graphqlQuery),
       method: "POST",
       headers: {
         Authorizaition: "Bearer " + this.props.token,
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     })
-      .then(res => {
+      .then((res) => {
         return res.json();
       })
-      .then(resData => {
+      .then((resData) => {
         console.log(resData);
         this.setState({
-          posts: resData.data.getPosts.posts.map(post => {
+          posts: resData.data.getPosts.posts.map((post) => {
             return { ...post, imagePath: post.imageUrl };
           }),
           totalPosts: resData.data.getPosts.totalPosts,
-          postsLoading: false
+          postsLoading: false,
         });
       })
       .catch(this.catchError);
   };
 
-  statusUpdateHandler = event => {
+  statusUpdateHandler = (event) => {
     event.preventDefault();
     fetch("http://localhost:8080/auth/status", {
       method: "PATCH",
       headers: {
         Authorizaition: "Bearer " + this.props.token,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        status: this.state.status
-      })
+        status: this.state.status,
+      }),
     })
-      .then(res => {
+      .then((res) => {
         if (res.status !== 200 && res.status !== 201) {
           throw new Error("Can't update status!");
         }
         return res.json();
       })
-      .then(resData => {
+      .then((resData) => {
         console.log(resData);
       })
       .catch(this.catchError);
@@ -141,13 +143,13 @@ class Feed extends Component {
     this.setState({ isEditing: true });
   };
 
-  startEditPostHandler = postId => {
-    this.setState(prevState => {
-      const loadedPost = { ...prevState.posts.find(p => p._id === postId) };
+  startEditPostHandler = (postId) => {
+    this.setState((prevState) => {
+      const loadedPost = { ...prevState.posts.find((p) => p._id === postId) };
 
       return {
         isEditing: true,
-        editPost: loadedPost
+        editPost: loadedPost,
       };
     });
   };
@@ -156,9 +158,9 @@ class Feed extends Component {
     this.setState({ isEditing: false, editPost: null });
   };
 
-  finishEditHandler = postData => {
+  finishEditHandler = (postData) => {
     this.setState({
-      editLoading: true
+      editLoading: true,
     });
     // Set up data (with image!)
     const formData = new FormData();
@@ -173,14 +175,14 @@ class Feed extends Component {
     fetch("http://localhost:8080/post-image", {
       method: "PUT",
       headers: {
-        Authorizaition: "Bearer " + this.props.token
+        Authorizaition: "Bearer " + this.props.token,
       },
-      body: formData
+      body: formData,
     })
-      .then(res => {
+      .then((res) => {
         return res.json();
       })
-      .then(fileResData => {
+      .then((fileResData) => {
         console.log(fileResData);
         const imageUrl = fileResData.filePath;
 
@@ -199,7 +201,7 @@ class Feed extends Component {
             createdAt
           }
         }
-      `
+      `,
         };
 
         if (this.state.editPost) {
@@ -218,7 +220,7 @@ class Feed extends Component {
             createdAt
           }
         }
-      `
+      `,
           };
         }
         console.log(graphqlQuery);
@@ -227,14 +229,14 @@ class Feed extends Component {
           body: JSON.stringify(graphqlQuery),
           headers: {
             Authorizaition: "Bearer " + this.props.token,
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         });
       })
-      .then(res => {
+      .then((res) => {
         return res.json();
       })
-      .then(resData => {
+      .then((resData) => {
         console.log(resData);
         if (resData.errors && resData.errors[0].status === 422) {
           throw new Error(
@@ -255,7 +257,7 @@ class Feed extends Component {
             content: resData.data.updatePost.content,
             creator: resData.data.updatePost.creator,
             createdAt: resData.data.updatePost.createdAt,
-            imagePath: resData.data.updatePost.imageUrl
+            imagePath: resData.data.updatePost.imageUrl,
           };
         } else {
           post = {
@@ -264,41 +266,42 @@ class Feed extends Component {
             content: resData.data.createPost.content,
             creator: resData.data.createPost.creator,
             createdAt: resData.data.createPost.createdAt,
-            imagePath: resData.data.createPost.imageUrl
+            imagePath: resData.data.createPost.imageUrl,
           };
         }
 
-        this.setState(prevState => {
+        this.setState((prevState) => {
           let updatedPosts = [...prevState.posts];
           let updatedTotalPosts = prevState.totalPosts;
           if (prevState.editPost) {
             const postIndex = prevState.posts.findIndex(
-              p => p._id === prevState.editPost._id
+              (p) => p._id === prevState.editPost._id
             );
             updatedPosts[postIndex] = post;
           } else {
-            updatedPosts++;
+            updatedTotalPosts++;
             if (prevState.posts.length >= 2) {
               updatedPosts.pop();
             }
+
             updatedPosts.unshift(post);
           }
           return {
-            totalPosts: updatedPosts,
+            totalPosts: updatedTotalPosts,
             posts: updatedPosts,
             isEditing: false,
             editPost: null,
-            editLoading: false
+            editLoading: false,
           };
         });
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
         this.setState({
           isEditing: false,
           editPost: null,
           editLoading: false,
-          error: err
+          error: err,
         });
       });
   };
@@ -307,27 +310,27 @@ class Feed extends Component {
     this.setState({ status: value });
   };
 
-  deletePostHandler = postId => {
+  deletePostHandler = (postId) => {
     this.setState({ postsLoading: true });
     let graphqlQuery = {
       query: `
         mutation {
           deletePost(id: "${postId}")
         }
-      `
+      `,
     };
     fetch("http://localhost:8080/graphql", {
       method: "POST",
       headers: {
         Authorizaition: "Bearer " + this.props.token,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(graphqlQuery)
+      body: JSON.stringify(graphqlQuery),
     })
-      .then(res => {
+      .then((res) => {
         return res.json();
       })
-      .then(resData => {
+      .then((resData) => {
         console.log(resData);
         // this.setState(prevState => {
         //   const updatedPosts = prevState.posts.filter(p => p._id !== postId);
@@ -335,7 +338,7 @@ class Feed extends Component {
         // });
         this.loadPosts();
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
         this.setState({ postsLoading: false });
       });
@@ -345,7 +348,7 @@ class Feed extends Component {
     this.setState({ error: null });
   };
 
-  catchError = error => {
+  catchError = (error) => {
     this.setState({ error: error });
   };
 
@@ -395,7 +398,7 @@ class Feed extends Component {
               lastPage={Math.ceil(this.state.totalPosts / 2)}
               currentPage={this.state.postPage}
             >
-              {this.state.posts.map(post => (
+              {this.state.posts.map((post) => (
                 <Post
                   key={post._id}
                   id={post._id}
