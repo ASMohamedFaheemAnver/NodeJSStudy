@@ -1,0 +1,25 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "engines": {
+    "node": "12.18.3",
+    "npm": "6.14.6"
+  },
+  "description": "Graphql api for demo!",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "AS MOHAMED FAHEEM ANVER",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-graphql": "^0.9.0",
+    "graphql": "^14.6.0",
+    "ip": "^1.1.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}
