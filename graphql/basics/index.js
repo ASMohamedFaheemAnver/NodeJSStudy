@@ -22,6 +22,31 @@ const users = [
   },
 ];
 
+// Demo user data
+const posts = [
+  {
+    id: "1",
+    title: "intro",
+    body: "",
+    published: true,
+    author: "1",
+  },
+  {
+    id: "12",
+    title: "intro2",
+    body: "",
+    published: true,
+    author: "12",
+  },
+  {
+    id: "13",
+    title: "intro4",
+    body: "",
+    published: true,
+    author: "13",
+  },
+];
+
 // Type definitions { schema }
 const typeDefs = `
     type Query{
@@ -31,6 +56,7 @@ const typeDefs = `
         add(numbers: [Float!]!): Float!
         grades: [Int!]!
         users: [User!]!
+        posts: [Post!]!
     }
 
     type User{
@@ -45,6 +71,7 @@ const typeDefs = `
       title: String!
       body: String!
       published: Boolean!
+      author: User!
     }
 `;
 
@@ -83,6 +110,17 @@ const resolvers = {
     },
     users: (parent, args, ctx, info) => {
       return users;
+    },
+    posts: (parent, args, ctx, info) => {
+      return posts;
+    },
+  },
+
+  Post: {
+    author: (parent, args, ctx, info) => {
+      return users.find((user) => {
+        return user.id === parent.author;
+      });
     },
   },
 };
