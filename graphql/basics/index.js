@@ -170,9 +170,7 @@ const resolvers = {
 
       const user = {
         id: new Date().getTime(),
-        name: args.email,
-        email: args.email,
-        age: args.age,
+        ...args,
       };
 
       users.push(user);
@@ -191,17 +189,14 @@ const resolvers = {
 
       const post = {
         id: new Date().getTime(),
-        title: args.title,
-        body: args.body,
-        published: args.published,
-        author: args.author,
+        ...args,
       };
 
       posts.push(post);
       return post;
     },
 
-    createComment: (parent, { text, author, post }, ctx, info) => {
+    createComment: (parent, args, ctx, info) => {
       const userExist = users.some((user) => {
         return user.id === author;
       });
@@ -220,9 +215,7 @@ const resolvers = {
 
       const comment = {
         id: new Date().getTime(),
-        text: text,
-        author: author,
-        post: post,
+        ...args,
       };
 
       comments.push(comment);
