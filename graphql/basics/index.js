@@ -83,9 +83,28 @@ const typeDefs = `
     }
 
     type Mutation{
-      createUser(name: String!, email: String!, age: Int): User!
-      createPost(title: String!, body: String!, published: Boolean!, author: ID!): Post!
-      createComment(text: String!, author: String!, post: String!): Comment!
+      createUser(data: CreateUserInput!): User!
+      createPost(data: CreatePostInput!): Post!
+      createComment(data: CreateCommentInput!): Comment!
+    }
+
+    input CreateUserInput{
+      name: String!
+      email: String! 
+      age: Int
+    }
+
+    input CreatePostInput{
+      title: String!
+      body: String!
+      published: Boolean!
+      author: ID!
+    }
+
+    input CreateCommentInput{
+      text: String! 
+      author: String!
+      post: String!
     }
 
     type User{
@@ -161,7 +180,7 @@ const resolvers = {
   Mutation: {
     createUser: (parent, args, ctx, info) => {
       const emailTaken = users.some((user) => {
-        return user.email === args.email;
+        return user.email === args.data.email;
       });
 
       if (emailTaken) {
@@ -170,7 +189,7 @@ const resolvers = {
 
       const user = {
         id: new Date().getTime(),
-        ...args,
+        ...args.data,
       };
 
       users.push(user);
@@ -180,7 +199,7 @@ const resolvers = {
 
     createPost: (parent, args, ctx, info) => {
       const userExist = users.some((user) => {
-        return user.id === args.author;
+        return user.id === args.data.author;
       });
 
       if (!userExist) {
@@ -189,7 +208,7 @@ const resolvers = {
 
       const post = {
         id: new Date().getTime(),
-        ...args,
+        ...args.data,
       };
 
       posts.push(post);
@@ -198,7 +217,7 @@ const resolvers = {
 
     createComment: (parent, args, ctx, info) => {
       const userExist = users.some((user) => {
-        return user.id === author;
+        return user.id === args.data.author;
       });
 
       if (!userExist) {
@@ -206,7 +225,7 @@ const resolvers = {
       }
 
       const postExistAndPublished = posts.some((cpost) => {
-        return cpost.published && cpost.id === post;
+        return cpost.published && cpost.id === args.data.post;
       });
 
       if (!postExistAndPublished) {
@@ -215,7 +234,7 @@ const resolvers = {
 
       const comment = {
         id: new Date().getTime(),
-        ...args,
+        ...args.data,
       };
 
       comments.push(comment);
