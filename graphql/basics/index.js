@@ -1,7 +1,7 @@
 import { GraphQLServer } from "graphql-yoga";
 
 // Demo user data
-const users = [
+let users = [
   {
     id: "1",
     name: "freedom",
@@ -23,7 +23,7 @@ const users = [
 ];
 
 // Demo user data
-const posts = [
+let posts = [
   {
     id: "1",
     title: "intro",
@@ -48,7 +48,7 @@ const posts = [
 ];
 
 // Demo comments
-const comments = [
+let comments = [
   {
     id: "1",
     text: "comment1",
@@ -84,8 +84,11 @@ const typeDefs = `
 
     type Mutation{
       createUser(data: CreateUserInput!): User!
+      deleteUser(id: ID!): User!
       createPost(data: CreatePostInput!): Post!
+      deletePost(id: ID!): Post!
       createComment(data: CreateCommentInput!): Comment!
+      deleteComment(id: ID!): Comment!
     }
 
     input CreateUserInput{
@@ -197,6 +200,32 @@ const resolvers = {
       return user;
     },
 
+    deleteUser: (parent, args, ctx, info) => {
+      const userIndex = users.findIndex((user) => {
+        return user.id === args.id;
+      });
+
+      if (userIndex === -1) {
+        throw new Error("User not found!");
+      }
+
+      const deletedUser = users.splice(userIndex, 1)[0];
+
+      posts = posts.filter((post) => {
+        const match = post.author === deletedUser.id;
+        console.log(match);
+        if (match) {
+          comments = comments.filter((comment) => {
+            return comment.author !== deletedUser.id;
+          });
+        }
+
+        return !match;
+      });
+
+      return deletedUser;
+    },
+
     createPost: (parent, args, ctx, info) => {
       const userExist = users.some((user) => {
         return user.id === args.data.author;
@@ -213,6 +242,26 @@ const resolvers = {
 
       posts.push(post);
       return post;
+    },
+
+    deletePost: (parent, args, ctx, info) => {
+      const postExist = posts.find((post) => {
+        return post.id === args.id;
+      });
+
+      if (!postExist) {
+        throw new Error("Post doesn't exist!");
+      }
+
+      posts = posts.filter((post) => {
+        return post.id !== args.id;
+      });
+
+      comments = comments.filter((comment) => {
+        return comment.post === postExist.id;
+      });
+
+      return postExist;
     },
 
     createComment: (parent, args, ctx, info) => {
@@ -239,6 +288,22 @@ const resolvers = {
 
       comments.push(comment);
       return comment;
+    },
+
+    deleteComment: (parent, args, ctx, info) => {
+      const deletedComment = comments.find((comment) => {
+        return comment.id === args.id;
+      });
+
+      if (!deletedComment) {
+        throw new Error("Comment doesn't exist!");
+      }
+
+      comments = comments.filter((comment) => {
+        return comment.id !== args.id;
+      });
+
+      return deletedComment;
     },
   },
 
