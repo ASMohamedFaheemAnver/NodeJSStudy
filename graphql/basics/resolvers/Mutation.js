@@ -18,6 +18,50 @@ const Mutation = {
     return user;
   },
 
+  updateUser: (
+    parent,
+    { id, data: { name, email, age } },
+    { db: { users, posts, comments } },
+    info
+  ) => {
+    const user = users.find((user) => {
+      return user.id === id;
+    });
+
+    if (!user) {
+      throw new Error("User not found!");
+    }
+
+    if (typeof email === "string") {
+      const emailTaken = users.some((user) => {
+        return user.email === email;
+      });
+
+      if (emailTaken) {
+        throw new Error("Email taken!");
+      }
+
+      user.email = email;
+    }
+
+    if (typeof name === "string") {
+      user.name = name;
+    }
+
+    if (typeof age !== "undefined") {
+      user.age === age;
+    }
+
+    users = users.map((pUser) => {
+      if (pUser.id === id) {
+        return user;
+      }
+      return pUser;
+    });
+
+    return user;
+  },
+
   deleteUser: (parent, args, { db: { users, posts, comments } }, info) => {
     const userIndex = users.findIndex((user) => {
       return user.id === args.id;
@@ -59,6 +103,38 @@ const Mutation = {
     };
 
     posts.push(post);
+    return post;
+  },
+
+  updatePost: (parent, { id, data: { body, title, published } }) => {
+    const post = posts.find((post) => {
+      return post.id === id;
+    });
+
+    if (!post) {
+      throw new Error("Post doesn't exist!");
+    }
+
+    if (typeof body === "string") {
+      post.body = body;
+    }
+
+    if (typeof title === "string") {
+      post.title = title;
+    }
+
+    if (typeof published !== "undefined") {
+      post.published = published;
+    }
+
+    posts = posts.map((pPost) => {
+      if (pPost.id === id) {
+        return post;
+      }
+
+      return pPost;
+    });
+
     return post;
   },
 
@@ -105,6 +181,35 @@ const Mutation = {
     };
 
     comments.push(comment);
+    return comment;
+  },
+
+  updateComment: (
+    parent,
+    { id, text },
+    { db: { users, posts, comments } },
+    info
+  ) => {
+    const comment = comments.find((comment) => {
+      return comment.id === id;
+    });
+
+    if (!comment) {
+      throw new Error("Comment doesn't exist!");
+    }
+
+    if (typeof text === "string") {
+      comment.text = text;
+    }
+
+    comments = comments.map((pComment) => {
+      if (pComment.id === id) {
+        return comment;
+      }
+
+      return pComment;
+    });
+
     return comment;
   },
 
