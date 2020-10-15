@@ -251,7 +251,7 @@ const Mutation = {
   updateComment: (
     parent,
     { id, text },
-    { db: { users, posts, comments } },
+    { db: { users, posts, comments }, pubSub },
     info
   ) => {
     const comment = comments.find((comment) => {
@@ -260,6 +260,14 @@ const Mutation = {
 
     if (!comment) {
       throw new Error("Comment doesn't exist!");
+    }
+
+    const postExistAndPublished = posts.some((cpost) => {
+      return cpost.published && cpost.id === comment.post;
+    });
+
+    if (!postExistAndPublished) {
+      throw new Error("Post doesn't exist or published!");
     }
 
     if (typeof text === "string") {
@@ -274,10 +282,22 @@ const Mutation = {
       return pComment;
     });
 
+    pubSub.publish(`comment:${comment.post}`, {
+      mutation: {
+        data: comment,
+        mutation: "PUT",
+      },
+    });
+
     return comment;
   },
 
-  deleteComment: (parent, args, { db: { users, posts, comments } }, info) => {
+  deleteComment: (
+    parent,
+    args,
+    { db: { users, posts, comments }, pubSub },
+    info
+  ) => {
     const deletedComment = comments.find((comment) => {
       return comment.id === args.id;
     });
@@ -286,8 +306,23 @@ const Mutation = {
       throw new Error("Comment doesn't exist!");
     }
 
+    const postExistAndPublished = posts.some((cpost) => {
+      return cpost.published && cpost.id === deletedComment.post;
+    });
+
+    if (!postExistAndPublished) {
+      throw new Error("Post doesn't exist or published!");
+    }
+
     comments = comments.filter((comment) => {
       return comment.id !== args.id;
+    });
+
+    pubSub.publish(`comment:${comment.post}`, {
+      mutation: {
+        data: deletedComment,
+        mutation: "DELETE",
+      },
     });
 
     return deletedComment;
