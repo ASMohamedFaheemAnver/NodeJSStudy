@@ -88,7 +88,12 @@ const Mutation = {
     return deletedUser;
   },
 
-  createPost: (parent, args, { db: { users, posts, comments } }, info) => {
+  createPost: (
+    parent,
+    args,
+    { db: { users, posts, comments }, pubSub },
+    info
+  ) => {
     const userExist = users.some((user) => {
       return user.id === args.data.author;
     });
@@ -102,14 +107,30 @@ const Mutation = {
       ...args.data,
     };
 
+    if (post.published) {
+      pubSub.publish("post", {
+        post: {
+          mutation: "POST",
+          data: post,
+        },
+      });
+    }
+
     posts.push(post);
     return post;
   },
 
-  updatePost: (parent, { id, data: { body, title, published } }) => {
+  updatePost: (
+    parent,
+    { id, data: { body, title, published } },
+    { pubSub, db: { posts } },
+    info
+  ) => {
     const post = posts.find((post) => {
       return post.id === id;
     });
+
+    const ppPost = post;
 
     if (!post) {
       throw new Error("Post doesn't exist!");
@@ -135,10 +156,38 @@ const Mutation = {
       return pPost;
     });
 
+    if (ppPost.published && !published) {
+      pubSub.publish("post", {
+        post: {
+          mutation: "DELETE",
+          data: ppPost,
+        },
+      });
+    } else if (!ppPost.published && published) {
+      pubSub.publish("post", {
+        post: {
+          mutation: "POST",
+          data: post,
+        },
+      });
+    } else if (post.published) {
+      pubSub.publish("post", {
+        post: {
+          mutation: "PUT",
+          data: post,
+        },
+      });
+    }
+
     return post;
   },
 
-  deletePost: (parent, args, { db: { users, posts, comments } }, info) => {
+  deletePost: (
+    parent,
+    args,
+    { db: { users, posts, comments }, pubSub },
+    info
+  ) => {
     const postExist = posts.find((post) => {
       return post.id === args.id;
     });
@@ -155,10 +204,19 @@ const Mutation = {
       return comment.post === postExist.id;
     });
 
+    if (postExist.published) {
+      pubSub.publish("post", { post: { mutation: "DELETE", data: postExist } });
+    }
+
     return postExist;
   },
 
-  createComment: (parent, args, { db: { users, posts, comments }, pubSub }, info) => {
+  createComment: (
+    parent,
+    args,
+    { db: { users, posts, comments }, pubSub },
+    info
+  ) => {
     const userExist = users.some((user) => {
       return user.id === args.data.author;
     });
@@ -181,7 +239,12 @@ const Mutation = {
     };
 
     comments.push(comment);
-    pubSub.publish(`comment:${comment.post}`, { comment });
+    pubSub.publish(`comment:${comment.post}`, {
+      mutation: {
+        data: comment,
+        mutation: "POST",
+      },
+    });
     return comment;
   },
 
