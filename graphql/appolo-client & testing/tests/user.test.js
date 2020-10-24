@@ -1,6 +1,7 @@
-import { getFirstName } from "./example/util";
+import { getFirstName } from "./example/util.js";
 
-test("Get firstname.", () => {
-  const firstName = getFirstName("Mohamed Faheem");
-  expect(firstName).toBe("Mohamed");
+test("Should return first name when given full name", () => {
+  const firstName = getFirstName("Andrew Mead");
+
+  expect(firstName).toBe("Andrew");
 });

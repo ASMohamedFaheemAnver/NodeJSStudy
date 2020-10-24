@@ -1,5 +1,5 @@
-function getFirstName(name) {
-  return name.split(" ")[0];
-}
+const getFirstName = (fullName) => {
+  return fullName.split(" ")[0];
+};
 
 export { getFirstName };
