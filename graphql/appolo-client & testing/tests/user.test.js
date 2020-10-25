@@ -1,7 +1,7 @@
 import "cross-fetch/polyfill";
 import { gql } from "apollo-boost";
 import prisma from "../src/prisma";
-import seedDatabase from "./util/seed-database";
+import seedDatabase, { userOne } from "./util/seed-database";
 import getClient from "./util/get-client";
 
 const client = getClient();
@@ -81,4 +81,24 @@ test("Shouldn't create user with short password.", async () => {
   `;
 
   expect(client.mutate({ mutation: createUser })).rejects.toThrow();
+});
+
+test("Should fetch user profile.", async () => {
+  const client = getClient(userOne.jwt);
+
+  const getProfile = gql`
+    query {
+      me {
+        id
+        name
+        email
+      }
+    }
+  `;
+
+  const { data } = await client.query({ query: getProfile });
+
+  expect(data.me.id).toBe(userOne.user.id);
+  expect(data.me.name).toBe(userOne.user.name);
+  expect(data.me.email).toBe(userOne.user.email);
 });
