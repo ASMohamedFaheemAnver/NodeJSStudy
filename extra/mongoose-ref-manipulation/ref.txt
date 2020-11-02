@@ -1,2 +1,5 @@
-#Explanation
+# Removing one-one and one-many references - Mongoose
 https://stackoverflow.com/questions/32674280/removing-one-one-and-one-many-references-mongoose
+
+# Push items into mongo array via mongoose
+https://stackoverflow.com/questions/33049707/push-items-into-mongo-array-via-mongoose
