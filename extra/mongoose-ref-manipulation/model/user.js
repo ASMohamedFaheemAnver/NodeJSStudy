@@ -12,7 +12,7 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
-
+  bio: { type: Schema.Types.ObjectId, ref: "Bio" },
   posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
 });
 
