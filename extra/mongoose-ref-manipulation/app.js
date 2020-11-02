@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const userRoutes = require("./routes/user");
+const postRoutes = require("./routes/post");
 
 const mongoose = require("mongoose");
 
@@ -21,6 +22,7 @@ app.use((req, res, next) => {
 app.use(bodyParser.json()); // application/json
 
 app.use("/user", userRoutes);
+app.use("/post", postRoutes);
 
 mongoose
   .connect(process.env.mongodb_url, {

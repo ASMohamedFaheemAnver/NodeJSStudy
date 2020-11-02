@@ -12,6 +12,10 @@ const memberSchema = new Schema({
     type: String,
     required: true,
   },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
 });
 
-module.exports = mongoose.model("Member", memberSchema);
+module.exports = mongoose.model("Post", memberSchema);
