@@ -1,5 +1,6 @@
 const User = require("../model/user");
 const Bio = require("../model/bio");
+const Post = require("../model/post");
 
 exports.getUsers = async (req, res, next) => {
   try {
@@ -19,32 +20,53 @@ exports.createUser = async (req, res, next) => {
 };
 
 exports.deleteUser = async (req, res, next) => {
-  const user = await User.findByIdAndDelete(req.params.userId).populate(
-    "posts bio"
-  );
-  for (let i = 0; i < user.posts.length; i++) {
-    await user.posts[i].delete();
-  }
-  await user.bio.delete();
-  res.status(200).json(user);
+  return User.findById(req.params.userId, (err, user) => {
+    if (!err) {
+      return user.deleteOne((err) => {
+        if (!err) {
+          Post.deleteOne({ _id: { $in: user.posts } }, (err) => {
+            if (!err) {
+              Bio.deleteOne({ _id: user.bio }, (err) => {
+                if (!err) {
+                  res.status(200).json(user);
+                }
+              });
+            }
+          });
+        }
+      });
+    } else {
+      console.log(err.message);
+    }
+  });
 };
 
 exports.createBio = async (req, res, next) => {
   const bio = new Bio({ ...req.body, user: req.params.userId });
-  await bio.save();
 
-  const user = await User.findById(req.params.userId);
-  user.bio = bio;
-  await user.save();
-
-  res.status(200).json(bio);
+  bio.save().then((aBio) => {
+    return User.updateOne(
+      { _id: req.params.userId },
+      { bio: aBio },
+      (err, user) => {
+        res.status(200).json(bio);
+      }
+    );
+  });
 };
 
 exports.deleteBio = async (req, res, next) => {
-  const deletedBio = await Bio.findById(req.params.bioId).populate("user");
-  deletedBio.user.bio = undefined;
-  await deletedBio.user.save();
-  await deletedBio.delete();
-
-  res.status(200).json(deletedBio);
+  return Bio.deleteOne({ _id: req.params.bioId }, (err) => {
+    if (!err) {
+      User.updateOne(
+        { bio: req.params.bioId },
+        { $unset: { bio: 1 } },
+        (err, raw) => {
+          if (!err) {
+            res.status(200).json(raw);
+          }
+        }
+      );
+    }
+  });
 };

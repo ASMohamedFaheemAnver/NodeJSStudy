@@ -3,3 +3,6 @@ https://stackoverflow.com/questions/32674280/removing-one-one-and-one-many-refer
 
 # Push items into mongo array via mongoose
 https://stackoverflow.com/questions/33049707/push-items-into-mongo-array-via-mongoose
+
+# How do I remove documents using Node.js Mongoose?
+https://stackoverflow.com/questions/5809788/how-do-i-remove-documents-using-node-js-mongoose
