@@ -6,3 +6,6 @@ https://stackoverflow.com/questions/33049707/push-items-into-mongo-array-via-mon
 
 # How do I remove documents using Node.js Mongoose?
 https://stackoverflow.com/questions/5809788/how-do-i-remove-documents-using-node-js-mongoose
+
+# Imperativeness of Mongoose Middleware aka Pre/Post-hooks in API’s Authentication
+https://medium.com/swlh/need-of-mongoose-middleware-in-authentication-3ddc70a993f

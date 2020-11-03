@@ -2,19 +2,14 @@ const Post = require("../model/post");
 const User = require("../model/user");
 
 exports.createPost = async (req, res, next) => {
-  // const user = await User.findById(req.params.userId);
   const post = new Post({ ...req.body, user: req.params.userId });
-  post.save().then((pPost) => {
-    return User.findById(pPost.user, (err, user) => {
-      if (user) {
-        user.posts.push(pPost);
-        user.save();
-      }
-    });
-  });
-  // user.posts.push(post);
-  // await user.save();
-  return res.status(200).json(post);
+  try {
+    await post.save();
+    return res.status(200).json(post);
+  } catch (err) {
+    console.log(err.message);
+    return res.status(200).json({ error: err.message });
+  }
 };
 
 exports.deletePost = async (req, res, next) => {
