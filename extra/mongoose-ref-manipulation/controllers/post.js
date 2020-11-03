@@ -22,3 +22,20 @@ exports.deletePost = async (req, res, next) => {
     return res.status(200).json({ error: err.message });
   }
 };
+
+/*
+developerSchema.post("findOne", function (doc, next) {
+  console.log(doc);
+  next();
+});
+
+developerSchema.pre("findOne", async function (next) {
+  const condition = this.getFilter();
+  this.setQuery({
+    ...condition,
+    password: await bcrypt.hash(condition.password, 10),
+  });
+  console.log(this.getFilter());
+  next();
+});
+*/

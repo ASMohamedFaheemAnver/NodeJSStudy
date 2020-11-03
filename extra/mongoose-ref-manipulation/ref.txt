@@ -9,3 +9,7 @@ https://stackoverflow.com/questions/5809788/how-do-i-remove-documents-using-node
 
 # Imperativeness of Mongoose Middleware aka Pre/Post-hooks in API’s Authentication
 https://medium.com/swlh/need-of-mongoose-middleware-in-authentication-3ddc70a993f
+
+# Ref manipulation links
+https://github.com/Automattic/mongoose/issues/6125
+https://github.com/Automattic/mongoose/issues/5042
