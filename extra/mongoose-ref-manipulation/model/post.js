@@ -40,4 +40,26 @@ postSchema.pre("save", function (next) {
   );
 });
 
+postSchema.pre("remove", function (next) {
+  const oldPost = this;
+  User.updateOne(
+    { _id: this.user },
+    { $pull: { posts: oldPost._id } },
+    (err, raw) => {
+      if (!err) {
+        console.log(raw);
+        if (raw.n == 1) {
+        } else {
+          next(
+            new Error("Owner of the post doesn't exist or post doesn't exist!")
+          );
+        }
+      } else {
+        console.log(err.message);
+      }
+      next();
+    }
+  );
+});
+
 module.exports = mongoose.model("Post", postSchema);
