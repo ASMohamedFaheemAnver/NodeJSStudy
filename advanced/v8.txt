@@ -1,0 +1,28 @@
+#Shipping
+* On by default.
+
+#Staged #In Progress
+* Disabled like iron man disabled spiderman's suit feature.
+
+
+#Notes
+* If we want to see all in progress features.
+  (node --v8-options | grep "in progress")
+* If we try those code pattern it will fail to execute but with --harmony_example it will run the code.
+  (node --harmony_trailing_comas -p 'function tc(a,b,){}')
+* To see all v8 options.
+  (node --v8-options | less)
+* To see specific v8 option.
+  (node --v8-options | grep gc)
+* gc option will enable us to manually manage garbage collecter don't use too often.
+* Node is more than the wrapper for V8, with node we can access os files, binary data, networking, and more.
+* Node access V8 via a v8 c++ API, Node itself has an API to interact with the file system, network, timer, etc.
+* Node executes c++ code using v8 object and function templates.
+* Node handle async events using libuv, after done with execution it simply passes the control to V8 engine after V8 done with code Node will take full controll.
+* Since V8 is single threaded, node cannot execute more code, no matter how many callback registered.
+* This is why we don't care about locking and race conditions in node.
+* Libuv developed for node by C library to handle I/O operations accross multiple operating system.
+* Libuv uses thread pool to handle what can't be done asynchronously at the operating system level.
+* Libuv is what provide node the event loop.
+* Other than libuv, node uses http-parser(request, response), c-ares(enable us to perform async DNS queries),
+  openssl is used to manage cryptography functions, zlib for fast async streaming, compression and decompression.
