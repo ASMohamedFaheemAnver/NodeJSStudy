@@ -1,0 +1,8 @@
+#Buffer
+#https://nodejs.org/api/buffer.html
+
+* Node buffer is a part of global object used by node to work with binary streams, This can be interpreted in many ways depending on the length of the charecters,
+  that's why we need to specify an encording, If we don't specify an encording, what we get back is a buffer.
+
+* Simply a buffer is a lower level data structure to represent a sequance of binary data,
+  Unless arrays we cannot modify the length of the buffer once it defined.

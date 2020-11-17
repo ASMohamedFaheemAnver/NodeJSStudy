@@ -1,0 +1,2 @@
+#global print
+https://stackoverflow.com/questions/4816099/chrome-sendrequest-error-typeerror-converting-circular-structure-to-json
