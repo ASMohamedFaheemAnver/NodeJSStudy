@@ -1,0 +1,21 @@
+{
+  "id": ".",
+  "path": "/home/freedom/Desktop/GitHub/NodeJSStudy/advanced/intro/global/require",
+  "exports": {},
+  "parent": null,
+  "filename": "/home/freedom/Desktop/GitHub/NodeJSStudy/advanced/intro/global/require/require.js",
+  "loaded": false,
+  "children": [],
+  "paths": [
+    "/home/freedom/Desktop/GitHub/NodeJSStudy/advanced/intro/global/require/node_modules",
+    "/home/freedom/Desktop/GitHub/NodeJSStudy/advanced/intro/global/node_modules",
+    "/home/freedom/Desktop/GitHub/NodeJSStudy/advanced/intro/node_modules",
+    "/home/freedom/Desktop/GitHub/NodeJSStudy/advanced/node_modules",
+    "/home/freedom/Desktop/GitHub/NodeJSStudy/node_modules",
+    "/home/freedom/Desktop/GitHub/node_modules",
+    "/home/freedom/Desktop/node_modules",
+    "/home/freedom/node_modules",
+    "/home/node_modules",
+    "/node_modules"
+  ]
+}
