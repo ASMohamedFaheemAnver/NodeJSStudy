@@ -1,9 +1,21 @@
-type Query {
-  me: String!
+type Member {
+  name: String!
+  age: Int!
 }
 
-#type Mutation {
-#}
+input MemberInput {
+  name: String!
+  age: Int!
+}
+
+type Query {
+  initProject: [Member!]!
+  ageGreaterThan(age: Int!): [Member!]!
+}
+
+type Mutation {
+  createMember(memberInput: MemberInput!): Member!
+}
 
 #type Subscription {
 #}

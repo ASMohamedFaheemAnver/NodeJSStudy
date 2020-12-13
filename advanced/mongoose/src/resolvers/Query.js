@@ -1,12 +1,14 @@
+import Member from "../model/member";
+
 const Query = {
-  me: () => {
-    return {
-      id: "123098",
-      name: "Freedom",
-      email: "jstrfaheem065@gmail.com",
-      age: 20,
-    };
+  initProject: async (parent, args, ctx, info) => {
+    const members = await Member.aggregate([{ $project: { name: 1, age: 1 } }]);
+    return members;
   },
+  ageGreaterThan: async (parent, { age }, ctx, info) => {
+    const members = await Member.aggregate([{ $match: { age: { $gte: age } } }]);
+    return members;
+  }
 };
 
 export { Query as default };

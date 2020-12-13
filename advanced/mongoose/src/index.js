@@ -12,7 +12,7 @@ const server = new GraphQLServer({
   typeDefs: "./src/schema.graphql",
   resolvers: {
     Query,
-    // Mutation,
+    Mutation,
     // Subscription,
   },
   context: {
@@ -29,7 +29,7 @@ mongoose
     useCreateIndex: true,
     useFindAndModify: false,
   }).then(_ => {
-    server.start(() => {
+    server.start({ port: 3000 }, () => {
       console.log("Server is up and running!");
     });
   }).catch((err) => {
