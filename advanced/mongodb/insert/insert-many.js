@@ -6,11 +6,13 @@ const { geDB } = require("../db/db");
   const movies = await db.collection("movies").insertMany([
     {
       name: "Kathi",
-      actor: "Vijay"
+      actor: "Vijay",
+      age: 40
     },
     {
       name: "Vedalam",
-      actor: "Ajith"
+      actor: "Ajith",
+      age: 50
     }]);
   console.log(movies);
 })();
