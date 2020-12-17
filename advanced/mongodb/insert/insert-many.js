@@ -3,11 +3,14 @@ const { geDB } = require("../db/db");
 
 (async () => {
   const db = await getDB();
-  const movies = await db.collection("movies").insertMany([{
-    name: "Kathi", actor: "Vijay"
-  }, {
-    name: "Vidalam",
-    actor: "Ajith"
-  }]);
+  const movies = await db.collection("movies").insertMany([
+    {
+      name: "Kathi",
+      actor: "Vijay"
+    },
+    {
+      name: "Vedalam",
+      actor: "Ajith"
+    }]);
   console.log(movies);
 })();
