@@ -1,0 +1,18 @@
+{
+  "name": "otp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon send.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "nexmo": "^2.9.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
