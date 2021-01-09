@@ -11,7 +11,7 @@ const formateMessage = require("./utils/messages");
 
 const { userJoin, getCurrentUser, userLeave, getRoomUsers } = require("./utils/users");
 
-const botName = "bot";
+const botName = "Bot";
 
 // set static folder
 app.use(express.static(path.join(__dirname, "public")));
@@ -24,7 +24,10 @@ io.on("connection", (socket) => {
     socket.join(user.room);
 
     // send welcome message to the user
-    socket.emit("message", formateMessage(botName, "welcome to chat application!"));
+    socket.emit(
+      "message",
+      formateMessage(botName, `Welcome to chat application ${user.username}!`)
+    );
 
     // brodcast when a user connects, will emit event to all clients except the client connecting.
     socket.broadcast
