@@ -1,2 +1,8 @@
 #Concurrent request can not handle properly with mongoDB and nodeJs
 #https://stackoverflow.com/questions/50872836/concurrent-request-can-not-handle-properly-with-mongodb-and-nodejs/50876391#50876391
+
+# Missing response for certain POST requests
+# When we are sending readable stream with our body it's not safe to throw errors without ensuring that the server still listenning to the readable stream,
+# Therefor we have to manually close the readable stream to avoid server interrupt.
+# https://github.com/nodejs/node/issues/12339
+# https://stackoverflow.com/questions/19277094/how-to-close-a-readable-stream-before-end
