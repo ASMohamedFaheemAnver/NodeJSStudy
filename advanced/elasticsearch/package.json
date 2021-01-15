@@ -9,6 +9,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@elastic/elasticsearch": "^7.10.0",
     "cross-fetch": "^3.0.6"
   }
 }
