@@ -1,0 +1,11 @@
+type Query {
+  me: String!
+}
+
+type Mutation {
+  emit: String!
+}
+
+type Subscription {
+  listen(id: String!): String!
+}
