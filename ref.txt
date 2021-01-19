@@ -1,11 +1,11 @@
 #Concurrent request can not handle properly with mongoDB and nodeJs
 #https://stackoverflow.com/questions/50872836/concurrent-request-can-not-handle-properly-with-mongodb-and-nodejs/50876391#50876391
 
-# Missing response for certain POST requests
-# When we are sending readable stream with our body it's not safe to throw errors without ensuring that the server still listenning to the readable stream,
-# Therefor we have to manually close the readable stream to avoid server interrupt.
-# https://github.com/nodejs/node/issues/12339
-# https://stackoverflow.com/questions/19277094/how-to-close-a-readable-stream-before-end
+#Missing response for certain POST requests
+#When we are sending readable stream with our body it's not safe to throw errors without ensuring that the server still listenning to the readable stream,
+#Therefor we have to manually close the readable stream to avoid server interrupt.
+#https://github.com/nodejs/node/issues/12339
+#https://stackoverflow.com/questions/19277094/how-to-close-a-readable-stream-before-end
 
 
 
@@ -15,5 +15,15 @@
 #When we configure our server to listen more than 55s, heroku throwing H15 Idle connection error,
 #It isn't a coding error, but heroku configuration error. to overcome this we have to manually set 
 #Server listenning time for the subscription websocket.
-# Allow keepAlive to be specified on subscription server
+#Allow keepAlive to be specified on subscription server
 #https://github.com/prisma-labs/graphql-yoga/pull/178
+
+
+#Even though we can filter subscriptions by giving unique names, 
+#it's not enought, because sometimes we have to make thousands of subscriptions to filter one client,
+#Therefor we have to have a mechanism to filter the emitted response according to arguments we receive later.
+#prisma2 subscriptions returns data: null
+#https://stackoverflow.com/questions/57714995/prisma2-subscriptions-returns-data-null
+#https://www.youtube.com/watch?v=wR76VDYW6DY
+#withFilter does not wait for asyncIteratorFn to resolve
+#https://github.com/apollographql/graphql-subscriptions/issues/161
