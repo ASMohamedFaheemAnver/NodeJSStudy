@@ -1,0 +1,27 @@
+{
+  "name": "nodejsstudy",
+  "version": "1.0.0",
+  "description": "RANDOM NODEJS STUDY!,",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ASMohamedFaheemAnver/NodeJSStudy.git"
+  },
+  "author": "A.S. Mohamed Faheem Anver",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ASMohamedFaheemAnver/NodeJSStudy/issues"
+  },
+  "homepage": "https://github.com/ASMohamedFaheemAnver/NodeJSStudy#readme",
+  "dependencies": {
+    "apollo-server": "^2.19.2",
+    "graphql": "^15.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
