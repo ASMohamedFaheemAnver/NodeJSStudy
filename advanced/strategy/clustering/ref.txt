@@ -1,0 +1,2 @@
+# sending 200 concurrent request to the server for 10s
+# ab -c200 -t10 http://localhost:3000/
