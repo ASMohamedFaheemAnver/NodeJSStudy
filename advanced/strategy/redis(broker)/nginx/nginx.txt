@@ -1,0 +1,4 @@
+# we can use nginx as a load blancer for our server
+# also nginx can be use to configure reverse proxy for our clusters
+# even nginx can direct request to the server running on different port
+# we should add our .conf file in nginx config.d (/etc/nginx/conf.d)

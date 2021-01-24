@@ -8,7 +8,7 @@ const client = redis.createClient({
 
 const app = express();
 
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
   const number = req.query.number;
   if (number % 2 === 0) {
     client.publish("worker.one", number);
