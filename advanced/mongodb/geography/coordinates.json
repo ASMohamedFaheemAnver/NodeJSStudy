@@ -1,0 +1,22 @@
+[
+  {
+    "_id": "60051c491600842a4fce6eca",
+    "name": "California Academy of Sciences",
+    "location": { "type": "Point", "coordinates": [-122.46606781683715, 37.76991377818879] }
+  },
+  {
+    "_id": "60100bd3e38b635eb75db313",
+    "name": "Conservatory of Flowers",
+    "location": { "type": "Point", "coordinates": [-122.45865419134334, 37.77205093289799] }
+  },
+  {
+    "_id": "60100cc1e38b635eb75db314",
+    "name": "Golden Gate Park Tennis Courts",
+    "location": { "type": "Point", "coordinates": [-122.45906188710414, 37.77042263014957] }
+  },
+  {
+    "_id": "60100d85e38b635eb75db315",
+    "name": "Bob's on Baker Street",
+    "location": { "type": "Point", "coordinates": [-122.44178688666975, 37.77672167001102] }
+  }
+]
