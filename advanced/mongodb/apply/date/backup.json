@@ -1,0 +1,17 @@
+{
+  "_id": "6016c7db9125cc02b58d0f0f",
+  "views": {
+    "day": { "count": 0, "now": "2021-01-30T18:30:00.000Z" },
+    "month": { "count": 0, "now": "2020-12-31T18:30:00.000Z" },
+    "year": { "count": 0, "now": "2020-12-31T18:30:00.000Z" },
+    "total": { "count": 4, "from": "2021-01-31T15:08:11.331Z", "to": "2021-01-31T15:30:15.557Z" }
+  },
+  "view_logs": [
+    "6016ccfe4cf593120cd1f1ec",
+    "6016ccff4cf593120cd1f1ed",
+    "6016cd064cf593120cd1f1ee",
+    "6016cd074cf593120cd1f1ef"
+  ],
+  "user": "asmohamedfaheemanver",
+  "__v": 0
+}
