@@ -1,2 +1,5 @@
 #What's the $unwind operator in MongoDB?
 #https://stackoverflow.com/questions/16448175/whats-the-unwind-operator-in-mongodb
+
+# Mongodb v4.0 Transaction, MongoError: Transaction numbers are only allowed on a replica set member or mongos
+# https://stackoverflow.com/questions/51461952/mongodb-v4-0-transaction-mongoerror-transaction-numbers-are-only-allowed-on-a

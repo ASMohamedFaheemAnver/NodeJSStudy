@@ -1,6 +1,11 @@
 type Member {
+  _id: String!
   name: String!
   age: Int!
+}
+
+type Message {
+  message: String!
 }
 
 input MemberInput {
@@ -15,6 +20,7 @@ type Query {
 
 type Mutation {
   createMember(memberInput: MemberInput!): Member!
+  useTransaction(memberId: String!): Message!
 }
 
 #type Subscription {

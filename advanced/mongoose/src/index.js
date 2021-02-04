@@ -5,7 +5,6 @@ import Subscription from "./resolvers/Subscription";
 
 import mongoose from "mongoose";
 
-
 const pubSub = new PubSub();
 
 const server = new GraphQLServer({
@@ -20,18 +19,16 @@ const server = new GraphQLServer({
   },
 });
 
-
-
 mongoose
   .connect(process.env.mongodb_url, {
     useNewUrlParser: true,
-    useUnifiedTopology: true,
     useCreateIndex: true,
-    useFindAndModify: false,
-  }).then(_ => {
+  })
+  .then((_) => {
     server.start({ port: 3000 }, () => {
       console.log("Server is up and running!");
     });
-  }).catch((err) => {
+  })
+  .catch((err) => {
     console.log(err);
   });
