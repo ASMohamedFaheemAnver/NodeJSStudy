@@ -1,0 +1,14 @@
+{
+  "name": "torrent",
+  "version": "1.0.0",
+  "description": "",
+  "main": "torrent.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "A.S. Mohamed Faheem Anver",
+  "license": "MIT",
+  "dependencies": {
+    "torrent-stream": "^1.2.1"
+  }
+}
