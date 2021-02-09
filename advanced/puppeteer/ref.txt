@@ -1,0 +1,5 @@
+# Error: Could not find browser revision 756035. Run “npm install”
+# https://stackoverflow.com/questions/62820586/error-could-not-find-browser-revision-756035-run-npm-install
+
+# How to scrape JSON from puppeteer?
+# https://stackoverflow.com/questions/48511357/how-to-scrape-json-from-puppeteer
