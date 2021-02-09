@@ -1,0 +1,15 @@
+{
+  "name": "anonymous",
+  "version": "1.0.0",
+  "description": "",
+  "main": "tor.js",
+  "dependencies": {
+    "socks-proxy-agent": "^5.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "A.S. Mohamed Faheem Anver",
+  "license": "MIT"
+}
