@@ -1,0 +1,5 @@
+# Mongodb get point on LineString $near [lng, lat]
+# https://stackoverflow.com/questions/38388012/mongodb-get-point-on-linestring-near-lng-lat
+
+# In Mongo what is the difference between $near and $nearSphere?
+# https://stackoverflow.com/questions/38287374/in-mongo-what-is-the-difference-between-near-and-nearsphere
