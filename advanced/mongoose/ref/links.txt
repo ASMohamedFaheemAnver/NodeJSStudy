@@ -1,0 +1,4 @@
+# https://stackoverflow.com/questions/4442453/mongodb-query-condition-on-comparing-2-fields
+# https://stackoverflow.com/questions/4442453/mongodb-query-condition-on-comparing-2-fields
+# https://stackoverflow.com/questions/53081756/mongodb-how-to-add-conditional-match-condition
+# https://stackoverflow.com/questions/41063587/mongoose-indexof-in-an-objectid-array
