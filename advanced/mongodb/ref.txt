@@ -3,3 +3,9 @@
 
 # In Mongo what is the difference between $near and $nearSphere?
 # https://stackoverflow.com/questions/38287374/in-mongo-what-is-the-difference-between-near-and-nearsphere
+
+# Mongoose indexOf in an ObjectId array
+# https://stackoverflow.com/questions/41063587/mongoose-indexof-in-an-objectid-array
+
+# $indexOfArray (aggregation)
+# https://docs.mongodb.com/manual/reference/operator/aggregation/indexOfArray/
