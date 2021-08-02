@@ -1,0 +1,6 @@
+# Spinning a postgres server
+# sudo docker run --name postgres-nest -p 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres
+# How to stop the container
+# docker container stop postgres-nest
+# Remove the container
+# docker container rm postgress-nest

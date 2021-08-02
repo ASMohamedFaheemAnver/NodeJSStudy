@@ -13,6 +13,7 @@ import {
 import { TasksService } from './tasks.service';
 import { Response } from 'express';
 import { Task, TaskStatus } from './task.model';
+import { Task as TaskEntity } from './task.entity';
 import { TaskInputDTO } from './dto/task-input-dto';
 import { Message } from './message.model';
 import { GetTasksFilterDTO } from './dto/get-tasks-filter-dto';
@@ -49,6 +50,11 @@ export class TasksController {
   @Get('/:id')
   getTaskById(@Param('id') id: string): Task {
     return this.tasksService.getTaskById(id);
+  }
+
+  @Get('/:id/db')
+  async getTaskByIdFromDB(@Param('id') id: string): Promise<TaskEntity> {
+    return await this.tasksService.getTaskByIdFromDB(id);
   }
 
   @Delete('/:id')
