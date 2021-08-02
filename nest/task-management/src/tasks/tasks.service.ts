@@ -1,6 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotAcceptableException,
+  NotFoundException,
+} from '@nestjs/common';
 import { GetTasksFilterDTO } from './dto/get-tasks-filter-dto';
 import { TaskInputDTO } from './dto/task-input-dto';
+import { UpdateTaskStatusDTO } from './dto/update-task-status-dto';
 import { Task, TaskStatus } from './task.model';
 
 @Injectable()
@@ -22,24 +27,41 @@ export class TasksService {
   }
 
   getTaskById(id: string): Task {
-    return this.tasks.find((task) => task.id == id);
+    const task = this.tasks.find((task) => task.id == id);
+    if (!task) {
+      throw new NotFoundException();
+    }
+    return task;
   }
 
   deleteTaskById(id: string): void {
+    let notFound = true;
     this.tasks = this.tasks.filter((task) => {
-      return task.id != id;
+      if (task.id != id) {
+        return true;
+      }
+      notFound = true;
+      return false;
     });
+    if (notFound) {
+      throw new NotFoundException();
+    }
   }
 
-  updateTaskById(id: string, status: TaskStatus): Task {
+  updateTaskById(id: string, statusDTO: UpdateTaskStatusDTO): Task {
     let updatedTask;
     this.tasks = this.tasks.map((task) => {
       if (task.id == id) {
-        updatedTask = { ...task, status };
+        updatedTask = { ...task, ...statusDTO };
         return { ...updatedTask };
       }
       return task;
     });
+
+    if (!updatedTask) {
+      throw new NotAcceptableException();
+    }
+
     return updatedTask;
   }
 
