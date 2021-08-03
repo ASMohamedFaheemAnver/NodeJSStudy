@@ -34,6 +34,11 @@ export class TasksController {
     return this.tasksService.getAllTasks();
   }
 
+  @Get('/db')
+  getTasksFromDB(@Query() filterDTO: GetTasksFilterDTO): Promise<TaskEntity[]> {
+    return this.tasksService.getTasksFromDB(filterDTO);
+  }
+
   /*@Post()
   createTask(@Body() body): Task {
     return this.tasksService.createTask({
@@ -45,6 +50,11 @@ export class TasksController {
   @Post()
   createTask(@Body() taskInputDTO: TaskInputDTO): Task {
     return this.tasksService.createTask(taskInputDTO);
+  }
+
+  @Post('/db')
+  createTaskInDB(@Body() taskInputDTO: TaskInputDTO): Promise<TaskEntity> {
+    return this.tasksService.createTaskInDB(taskInputDTO);
   }
 
   @Get('/:id')
@@ -63,11 +73,25 @@ export class TasksController {
     return { message: 'task deleted successfuly' };
   }
 
+  @Delete('/:id/db')
+  deleteTaskByIdFromDB(@Param('id') id: string): Message {
+    this.tasksService.deleteTaskByIdFromDB(id);
+    return { message: 'task deleted successfuly' };
+  }
+
   @Patch('/:id/status')
   updateTaskById(
     @Param('id') id: string,
     @Body() statusDTO: UpdateTaskStatusDTO,
   ): Task {
     return this.tasksService.updateTaskById(id, statusDTO);
+  }
+
+  @Patch('/:id/status/db')
+  updateTaskByIdFromDB(
+    @Param('id') id: string,
+    @Body() statusDTO: UpdateTaskStatusDTO,
+  ): Promise<TaskEntity> {
+    return this.tasksService.updateTaskByIdFromDB(id, statusDTO);
   }
 }

@@ -24,6 +24,10 @@ export class TasksService {
     return this.tasks;
   }
 
+  getTasksFromDB(filterDTO: GetTasksFilterDTO): Promise<TaskEntity[]> {
+    return this.tasksRepository.getTasksFromDB(filterDTO);
+  }
+
   createTask(taskInputDTO: TaskInputDTO): Task {
     const task: Task = {
       id: new Date().getTime().toString(),
@@ -31,6 +35,15 @@ export class TasksService {
       status: TaskStatus.OPEN,
     };
     this.tasks.push(task);
+    return task;
+  }
+
+  async createTaskInDB(taskInputDTO: TaskInputDTO): Promise<TaskEntity> {
+    const task = this.tasksRepository.create({
+      ...taskInputDTO,
+      status: TaskStatus.OPEN,
+    });
+    await this.tasksRepository.save(task);
     return task;
   }
 
@@ -64,6 +77,14 @@ export class TasksService {
     }
   }
 
+  async deleteTaskByIdFromDB(id: string): Promise<void> {
+    let task = await this.tasksRepository.findOne(id);
+    if (!task) {
+      throw new NotFoundException();
+    }
+    await this.tasksRepository.delete({ id });
+  }
+
   updateTaskById(id: string, statusDTO: UpdateTaskStatusDTO): Task {
     let updatedTask;
     this.tasks = this.tasks.map((task) => {
@@ -79,6 +100,19 @@ export class TasksService {
     }
 
     return updatedTask;
+  }
+
+  async updateTaskByIdFromDB(
+    id: string,
+    statusDTO: UpdateTaskStatusDTO,
+  ): Promise<TaskEntity> {
+    const task = await this.tasksRepository.findOne(id);
+    if (!task) {
+      throw new NotFoundException();
+    }
+    task.status = statusDTO.status;
+    await this.tasksRepository.save(task);
+    return task;
   }
 
   getTasksWithFilters(filterDTO: GetTasksFilterDTO): Task[] {
