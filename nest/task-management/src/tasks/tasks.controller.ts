@@ -39,8 +39,11 @@ export class TasksController {
   }
 
   @Get('/db')
-  getTasksFromDB(@Query() filterDTO: GetTasksFilterDTO): Promise<TaskEntity[]> {
-    return this.tasksService.getTasksFromDB(filterDTO);
+  getTasksFromDB(
+    @Query() filterDTO: GetTasksFilterDTO,
+    @GetUser() user: User,
+  ): Promise<TaskEntity[]> {
+    return this.tasksService.getTasksFromDB(filterDTO, user);
   }
 
   /*@Post()
@@ -70,8 +73,11 @@ export class TasksController {
   }
 
   @Get('/:id/db')
-  async getTaskByIdFromDB(@Param('id') id: string): Promise<TaskEntity> {
-    return await this.tasksService.getTaskByIdFromDB(id);
+  async getTaskByIdFromDB(
+    @Param('id') id: string,
+    @GetUser() user: User,
+  ): Promise<TaskEntity> {
+    return await this.tasksService.getTaskByIdFromDB(id, user);
   }
 
   @Delete('/:id')
@@ -81,8 +87,11 @@ export class TasksController {
   }
 
   @Delete('/:id/db')
-  deleteTaskByIdFromDB(@Param('id') id: string): Message {
-    this.tasksService.deleteTaskByIdFromDB(id);
+  deleteTaskByIdFromDB(
+    @Param('id') id: string,
+    @GetUser() user: User,
+  ): Message {
+    this.tasksService.deleteTaskByIdFromDB(id, user);
     return { message: 'task deleted successfuly' };
   }
 
@@ -98,7 +107,8 @@ export class TasksController {
   updateTaskByIdFromDB(
     @Param('id') id: string,
     @Body() statusDTO: UpdateTaskStatusDTO,
+    @GetUser() user: User,
   ): Promise<TaskEntity> {
-    return this.tasksService.updateTaskByIdFromDB(id, statusDTO);
+    return this.tasksService.updateTaskByIdFromDB(id, statusDTO, user);
   }
 }

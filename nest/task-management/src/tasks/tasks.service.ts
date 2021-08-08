@@ -25,8 +25,11 @@ export class TasksService {
     return this.tasks;
   }
 
-  getTasksFromDB(filterDTO: GetTasksFilterDTO): Promise<TaskEntity[]> {
-    return this.tasksRepository.getTasksFromDB(filterDTO);
+  getTasksFromDB(
+    filterDTO: GetTasksFilterDTO,
+    user: User,
+  ): Promise<TaskEntity[]> {
+    return this.tasksRepository.getTasksFromDB(filterDTO, user);
   }
 
   createTask(taskInputDTO: TaskInputDTO): Task {
@@ -60,8 +63,10 @@ export class TasksService {
     return task;
   }
 
-  async getTaskByIdFromDB(id: string): Promise<TaskEntity> {
-    const task: TaskEntity = await this.tasksRepository.findOne(id);
+  async getTaskByIdFromDB(id: string, user: User): Promise<TaskEntity> {
+    const task: TaskEntity = await this.tasksRepository.findOne({
+      where: { id, user },
+    });
     if (!task) {
       throw new NotFoundException();
     }
@@ -82,8 +87,8 @@ export class TasksService {
     }
   }
 
-  async deleteTaskByIdFromDB(id: string): Promise<void> {
-    let task = await this.tasksRepository.findOne(id);
+  async deleteTaskByIdFromDB(id: string, user: User): Promise<void> {
+    let task = await this.tasksRepository.findOne({ where: { id, user } });
     if (!task) {
       throw new NotFoundException();
     }
@@ -110,8 +115,9 @@ export class TasksService {
   async updateTaskByIdFromDB(
     id: string,
     statusDTO: UpdateTaskStatusDTO,
+    user: User,
   ): Promise<TaskEntity> {
-    const task = await this.tasksRepository.findOne(id);
+    const task = await this.tasksRepository.findOne({ where: { id, user } });
     if (!task) {
       throw new NotFoundException();
     }
