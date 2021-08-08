@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/auth/user.entity';
 import { GetTasksFilterDTO } from './dto/get-tasks-filter-dto';
 import { TaskInputDTO } from './dto/task-input-dto';
 import { UpdateTaskStatusDTO } from './dto/update-task-status-dto';
@@ -38,10 +39,14 @@ export class TasksService {
     return task;
   }
 
-  async createTaskInDB(taskInputDTO: TaskInputDTO): Promise<TaskEntity> {
+  async createTaskInDB(
+    taskInputDTO: TaskInputDTO,
+    user: User,
+  ): Promise<TaskEntity> {
     const task = this.tasksRepository.create({
       ...taskInputDTO,
       status: TaskStatus.OPEN,
+      user,
     });
     await this.tasksRepository.save(task);
     return task;

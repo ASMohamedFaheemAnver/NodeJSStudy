@@ -19,6 +19,8 @@ import { Message } from './message.model';
 import { GetTasksFilterDTO } from './dto/get-tasks-filter-dto';
 import { UpdateTaskStatusDTO } from './dto/update-task-status-dto';
 import { AuthGuard } from '@nestjs/passport';
+import { User } from 'src/auth/user.entity';
+import { GetUser } from 'src/auth/get-user.decorator';
 
 @Controller('tasks')
 @UseGuards(AuthGuard())
@@ -55,8 +57,11 @@ export class TasksController {
   }
 
   @Post('/db')
-  createTaskInDB(@Body() taskInputDTO: TaskInputDTO): Promise<TaskEntity> {
-    return this.tasksService.createTaskInDB(taskInputDTO);
+  createTaskInDB(
+    @Body() taskInputDTO: TaskInputDTO,
+    @GetUser() user: User,
+  ): Promise<TaskEntity> {
+    return this.tasksService.createTaskInDB(taskInputDTO, user);
   }
 
   @Get('/:id')
