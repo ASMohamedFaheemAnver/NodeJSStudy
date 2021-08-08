@@ -9,17 +9,19 @@ import {
   Post,
   Query,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
-import { Response } from 'express';
-import { Task, TaskStatus } from './task.model';
+import { Task } from './task.model';
 import { Task as TaskEntity } from './task.entity';
 import { TaskInputDTO } from './dto/task-input-dto';
 import { Message } from './message.model';
 import { GetTasksFilterDTO } from './dto/get-tasks-filter-dto';
 import { UpdateTaskStatusDTO } from './dto/update-task-status-dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('tasks')
+@UseGuards(AuthGuard())
 export class TasksController {
   constructor(private tasksService: TasksService) {}
 
