@@ -28,7 +28,10 @@
 #withFilter does not wait for asyncIteratorFn to resolve
 #https://github.com/apollographql/graphql-subscriptions/issues/161
 
-## ToDo
 # While populating I have to rename paths according to condition, Related resource maybe
 # Is there an elseif thing in MongoDB to $cond while aggregating
 # https://stackoverflow.com/questions/27479347/is-there-an-elseif-thing-in-mongodb-to-cond-while-aggregating
+
+# ToDo
+# Mongoose multiple connections
+# https://stackoverflow.com/questions/32906467/mongoose-multiple-connections
