@@ -31,7 +31,9 @@
 # While populating I have to rename paths according to condition, Related resource maybe
 # Is there an elseif thing in MongoDB to $cond while aggregating
 # https://stackoverflow.com/questions/27479347/is-there-an-elseif-thing-in-mongodb-to-cond-while-aggregating
-
-# ToDo
 # Mongoose multiple connections
 # https://stackoverflow.com/questions/32906467/mongoose-multiple-connections
+
+# ToDo
+# Firebase phone authentication using nodejs
+# https://stackoverflow.com/questions/52184020/firebase-phone-authentication-using-nodejs
