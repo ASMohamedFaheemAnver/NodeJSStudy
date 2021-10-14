@@ -1,0 +1,2 @@
+# Doing a cleanup action just before Node.js exits
+# https://stackoverflow.com/questions/14031763/doing-a-cleanup-action-just-before-node-js-exits
