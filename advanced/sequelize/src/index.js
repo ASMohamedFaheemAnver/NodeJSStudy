@@ -4,15 +4,16 @@ const Sequelize = require("sequelize");
 const sequelize = new Sequelize("carddb", "root", "", {
   dialect: "mysql",
 });
+global.sequelize = sequelize;
 
-const User = sequelize.define("User", {
-  uuid: {
-    type: Sequelize.UUID,
-    primaryKey: true,
-    defaultValue: Sequelize.UUIDV4,
+const User = require("./models/User");
+const Post = require("./models/Post");
+
+User.belongsTo(Post, {
+  foreignKey: {
+    name: "userId",
   },
-  name: Sequelize.STRING,
-  bio: Sequelize.TEXT,
+  as: "post",
 });
 
 const closeDBConnection = () => {
@@ -37,13 +38,25 @@ const closeDBConnection = () => {
 sequelize
   .sync({
     logging: console.log,
-    // force: true
+    force: true,
   })
   .then(async (_) => {
     console.log({ msg: "connected" });
-    const users = await User.findAll();
-    console.log({ users });
+    playBoy();
   })
   .catch((err) => {
     console.log({ err });
   });
+
+const playBoy = async () => {
+  const user = await User.create({
+    name: "codersauthority",
+  });
+  const post = await Post.create({
+    title: "Post of mine!",
+    userId: user.uuid,
+  });
+
+  const users = await User.findAll({ include: { model: Post, as: "post" } });
+  console.log({ user: users[0].post });
+};
