@@ -33,7 +33,9 @@
 # https://stackoverflow.com/questions/27479347/is-there-an-elseif-thing-in-mongodb-to-cond-while-aggregating
 # Mongoose multiple connections
 # https://stackoverflow.com/questions/32906467/mongoose-multiple-connections
-
-# ToDo
 # Firebase phone authentication using nodejs
 # https://stackoverflow.com/questions/52184020/firebase-phone-authentication-using-nodejs
+
+# ToDo
+# Multiple graphql clients using split operation
+# https://www.jamalx31.com/tech-posts/using-apollo-with-multiple-graphql-endpoints
