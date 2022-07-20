@@ -36,6 +36,5 @@
 # Firebase phone authentication using nodejs
 # https://stackoverflow.com/questions/52184020/firebase-phone-authentication-using-nodejs
 
-# ToDo
 # Multiple graphql clients using split operation
 # https://www.jamalx31.com/tech-posts/using-apollo-with-multiple-graphql-endpoints
