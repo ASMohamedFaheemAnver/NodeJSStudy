@@ -1,5 +1,13 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+} from '@nestjs/common';
 import { randomUUID } from 'crypto';
+import { CreateMessageDto } from './dtos/create-message-dto';
 
 @Controller('messages')
 export class MessagesController {
@@ -11,20 +19,20 @@ export class MessagesController {
   }
 
   @Post()
-  createMessage(@Body('message') message): { id: string; message: string } {
-    if (!message) {
-      return null;
-    }
-    console.log({ message });
-    const messageObject = { id: randomUUID(), message };
+  createMessage(@Body() body: CreateMessageDto): {
+    id: string;
+    message: string;
+  } {
+    console.log({ ...body });
+    const messageObject = { id: randomUUID(), ...body };
     this.messages.push(messageObject);
     return messageObject;
   }
 
   @Get('/:id')
   getMessage(@Param('id') id) {
-    return (
-      this.messages.find((message) => message.id == id) || { msg: 'not found' }
-    );
+    const message = this.messages.find((message) => message.id == id);
+    if (!message) throw new BadRequestException(['message not found']);
+    return message;
   }
 }
