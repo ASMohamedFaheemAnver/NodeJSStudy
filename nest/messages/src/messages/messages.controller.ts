@@ -1,38 +1,40 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Get,
+  NotFoundException,
   Param,
   Post,
 } from '@nestjs/common';
-import { randomUUID } from 'crypto';
 import { CreateMessageDto } from './dtos/create-message-dto';
+import { MessagesService } from './messages.service';
 
 @Controller('messages')
 export class MessagesController {
-  private messages: { id: string; message: string }[] = [];
+  private messagesService: MessagesService;
+
+  constructor() {
+    this.messagesService = new MessagesService();
+  }
 
   @Get('/')
-  getMessages(): { id: string; message: string }[] {
-    return this.messages;
+  getMessages(): Promise<{ id: string; message: string }[]> {
+    return this.messagesService.findAll();
   }
 
   @Post()
-  createMessage(@Body() body: CreateMessageDto): {
-    id: string;
-    message: string;
-  } {
-    console.log({ ...body });
-    const messageObject = { id: randomUUID(), ...body };
-    this.messages.push(messageObject);
-    return messageObject;
+  createMessage(
+    @Body() body: CreateMessageDto,
+  ): Promise<{ id: string; message: string }> {
+    return this.messagesService.create(body.message);
   }
 
   @Get('/:id')
-  getMessage(@Param('id') id) {
-    const message = this.messages.find((message) => message.id == id);
-    if (!message) throw new BadRequestException(['message not found']);
+  async getMessage(@Param('id') id): Promise<{ id: string; message: string }> {
+    const message = await this.messagesService.findOne(id);
+    if (!message) {
+      throw new NotFoundException('message not found');
+    }
     return message;
   }
 }
