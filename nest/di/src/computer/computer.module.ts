@@ -1,0 +1,11 @@
+import { Module } from '@nestjs/common';
+import { CpuModule } from 'src/cpu/cpu.module';
+import { DiskModule } from 'src/disk/disk.module';
+import { ComputerController } from './computer.controller';
+
+@Module({
+  // CpuModule, DiskModule can be used inside Computer modules, Which mean we can access all exports within these modules
+  imports: [CpuModule, DiskModule],
+  controllers: [ComputerController],
+})
+export class ComputerModule {}
