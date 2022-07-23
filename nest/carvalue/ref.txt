@@ -1,2 +1,8 @@
 # Organize imports in whole project
 # organize-imports-cli src/*.ts src/**/*.ts
+
+# Dto with either one properties
+# https://github.com/typestack/class-validator/issues/245
+
+# Nestjs socket from exception filter context is defined even though exception comes from http request and there's no sockets within app?
+# https://stackoverflow.com/questions/67088551/nestjs-socket-from-exception-filter-context-is-defined-even-though-exception-com
