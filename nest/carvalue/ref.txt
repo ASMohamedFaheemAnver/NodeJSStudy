@@ -1,0 +1,2 @@
+# Organize imports in whole project
+# organize-imports-cli src/*.ts src/**/*.ts
