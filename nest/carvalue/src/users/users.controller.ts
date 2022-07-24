@@ -8,10 +8,13 @@ import {
   Post,
   Query,
   Session,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from 'src/guards/auth.guard';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { DeleteResult } from 'typeorm';
 import { AuthService } from './auth.service';
+import { CurrentUser } from './decorators/current-user.dacorator';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserDto } from './dtos/user.dto';
@@ -26,9 +29,10 @@ export class UsersController {
     private authService: AuthService,
   ) {}
 
+  @UseGuards(AuthGuard)
   @Get('/me')
-  async me(@Session() session: any): Promise<User> {
-    return this.usersService.findOne(session.userId);
+  async me(@CurrentUser() user: User) {
+    return user;
   }
 
   @Post('/signup')
