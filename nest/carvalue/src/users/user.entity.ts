@@ -14,6 +14,9 @@ export class User {
   id: string;
   @Column()
   email: string;
+
+  // Nest recommended approach to remove password from response
+  // @Exclude()
   @Column()
   password: string;
 
