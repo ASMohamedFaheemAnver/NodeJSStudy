@@ -29,7 +29,9 @@ export class SerializeInterceptor implements NestInterceptor {
     return next.handle().pipe(
       map((data: any) => {
         // Run something before response is sent out
-        // console.log({ data });
+        if (data?.message || data?.messages) {
+          return data;
+        }
         return plainToInstance(this.dto, data, {
           excludeExtraneousValues: true,
         });

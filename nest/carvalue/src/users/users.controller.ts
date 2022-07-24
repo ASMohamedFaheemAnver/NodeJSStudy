@@ -7,9 +7,11 @@ import {
   Patch,
   Post,
   Query,
+  Session,
 } from '@nestjs/common';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { DeleteResult } from 'typeorm';
+import { AuthService } from './auth.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserDto } from './dtos/user.dto';
@@ -19,16 +21,48 @@ import { UsersService } from './users.service';
 @Serialize(UserDto)
 @Controller('auth')
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private authService: AuthService,
+  ) {}
+
+  @Get('/me')
+  async me(@Session() session: any): Promise<User> {
+    return this.usersService.findOne(session.userId);
+  }
 
   @Post('/signup')
-  createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
+  async createUser(
+    @Body() createUserDto: CreateUserDto,
+    @Session() session: any,
+  ): Promise<User> {
     console.log({ createUserDto });
-    const user = this.usersService.create(
+    const user = await this.authService.signup(
       createUserDto.email,
       createUserDto.password,
     );
+    session.userId = user.id;
     return user;
+  }
+
+  @Post('/signin')
+  async signin(
+    @Body() createUserDto: CreateUserDto,
+    @Session() session: any,
+  ): Promise<User> {
+    console.log({ createUserDto });
+    const user = await this.authService.signin(
+      createUserDto.email,
+      createUserDto.password,
+    );
+    session.userId = user.id;
+    return user;
+  }
+
+  @Post('/signout')
+  async signout(@Session() session: any) {
+    delete session.userId;
+    return { message: 'signout successfully' };
   }
 
   // Nest recommended approach to remove password from response

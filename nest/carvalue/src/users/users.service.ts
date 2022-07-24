@@ -13,7 +13,7 @@ export class UsersService {
   }
 
   async findOne(id: string) {
-    const user = await this.repository.findOne({ where: { id } });
+    const user = await this.repository.findOne({ where: { id: id ?? '' } });
     if (!user) {
       // HTTP protocol only understand these error
       // Own exception filter will help reusing this service inside WebSockets and GRPC
