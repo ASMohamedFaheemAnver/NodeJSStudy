@@ -1,9 +1,11 @@
+import { Report } from 'src/reports/report.entity';
 import {
   AfterInsert,
   AfterRemove,
   AfterUpdate,
   Column,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -17,8 +19,16 @@ export class User {
 
   // Nest recommended approach to remove password from response
   // @Exclude()
+  // @Column({ select: false })
   @Column()
   password: string;
+
+  // ()=> Report is to avoid circular dependency
+  @OneToMany(() => Report, (report) => report.user, {
+    // eager: false,
+    // lazy: true,
+  })
+  reports: Report[];
 
   @AfterInsert()
   logInsert() {
