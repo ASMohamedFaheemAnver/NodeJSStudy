@@ -23,6 +23,9 @@ export class User {
   @Column()
   password: string;
 
+  @Column({ default: true })
+  admin: boolean;
+
   // ()=> Report is to avoid circular dependency
   @OneToMany(() => Report, (report) => report.user, {
     // eager: false,

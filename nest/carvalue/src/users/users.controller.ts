@@ -14,7 +14,7 @@ import { AuthGuard } from 'src/guards/auth.guard';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { DeleteResult } from 'typeorm';
 import { AuthService } from './auth.service';
-import { CurrentUser } from './decorators/current-user.dacorator';
+import { CurrentUser } from './decorators/current-user.decorator';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserDto } from './dtos/user.dto';

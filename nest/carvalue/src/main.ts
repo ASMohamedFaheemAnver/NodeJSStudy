@@ -6,7 +6,7 @@ const cookieSession = require('cookie-session');
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.use(cookieSession({ keys: ['cookie-session-private-key'] }));
+  // app.use(cookieSession({ keys: ['cookie-session-private-key'] }));
   // whitelist: true will remove extra body fields
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   await app.listen(3000);
