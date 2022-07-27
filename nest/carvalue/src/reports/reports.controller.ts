@@ -47,6 +47,6 @@ export class ReportsController {
   @Get()
   getEstimate(@Query() getEstimateDto: GetEstimateDto) {
     // console.log({ getEstimateDto });
-    // return this.reportsService.updateApproval(id, approveReportDto.approved);
+    return this.reportsService.getEstimate(getEstimateDto);
   }
 }
