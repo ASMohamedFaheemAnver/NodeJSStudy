@@ -11,11 +11,15 @@ if (cluster.isMaster) {
   }
 
   cluster.on("online", (worker) => {
-    console.log(`worker with id : ${worker.id} and pid : ${worker.process.pid} is online.`);
+    console.log(
+      `worker with id : ${worker.id} and pid : ${worker.process.pid} is online.`
+    );
   });
 
   cluster.on("exit", (worker) => {
-    console.log(`worker with id : ${worker.id} and pid : ${worker.process.pid} is offline.`);
+    console.log(
+      `worker with id : ${worker.id} and pid : ${worker.process.pid} is offline.`
+    );
 
     console.log(`let's fork another worker!`);
     cluster.fork();
