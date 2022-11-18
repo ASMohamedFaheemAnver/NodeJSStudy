@@ -5,8 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
+import { Comment } from './comment.entity';
 import { type, host, port, username, password, database } from './config';
-import { User } from './entities/user.entity';
+import { User } from './user.entity';
 
 @Module({
   imports: [
@@ -17,10 +18,10 @@ import { User } from './entities/user.entity';
       username,
       password,
       database,
-      entities: [User],
+      entities: [User, Comment],
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, Comment]),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),

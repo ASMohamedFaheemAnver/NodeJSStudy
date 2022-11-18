@@ -1,14 +1,33 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from './entities/user.entity';
+import { Comment } from './comment.entity';
+import { UserWithComments } from './user-with-comment';
+import { User } from './user.entity';
 
 @Injectable()
 export class AppService {
-  constructor(@InjectRepository(User) private repository: Repository<User>) {
-    // this.repository.save({ name: 'udev' });
+  constructor(
+    @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(Comment) private commentRepository: Repository<Comment>,
+  ) {
+    // this.userRepository.find().then((users) => {
+    //   users.forEach((user) => {
+    //     this.commentRepository.save({
+    //       user,
+    //       description: Math.round(Math.random() * 100).toString(),
+    //     });
+    //   });
+    // });
   }
   async getUsers(): Promise<User[]> {
-    return await this.repository.find({});
+    return await this.userRepository.find({});
+  }
+
+  async getUsersWithComments(): Promise<UserWithComments[]> {
+    return await this.userRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.comments', 'comments')
+      .getMany();
   }
 }

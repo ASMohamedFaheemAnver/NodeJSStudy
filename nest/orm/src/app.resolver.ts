@@ -2,7 +2,8 @@ import { Controller, Get } from '@nestjs/common';
 import { Query, Resolver, Root } from '@nestjs/graphql';
 import { AppService } from './app.service';
 import { Message } from './constants/message';
-import { User } from './entities/user.entity';
+import { UserWithComments } from './user-with-comment';
+import { User } from './user.entity';
 
 @Resolver()
 export class AppResolver {
@@ -17,5 +18,10 @@ export class AppResolver {
   @Query((_) => [User])
   getUsers(): Promise<User[]> {
     return this.appService.getUsers();
+  }
+
+  @Query((_) => [UserWithComments])
+  getUsersWithComments(): Promise<UserWithComments[]> {
+    return this.appService.getUsersWithComments();
   }
 }
