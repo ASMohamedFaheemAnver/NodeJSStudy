@@ -1,0 +1,6 @@
+# JOIN with population limit basic
+# SELECT * FROM user INNER JOIN (SELECT * FROM comment ORDER BY userId DESC LIMIT 2) as c ON user.id = c.userId;
+
+# Get top 2 from grouped by element.
+# https://stackoverflow.com/questions/12113699/get-top-n-records-for-each-group-of-grouped-results
+# SELECT c.* FROM comment AS c LEFT JOIN comment AS cs  ON c.userId = cs.userId AND c.description <= cs.description GROUP BY c.id HAVING COUNT(*) <= 1 ORDER BY c.userId, c.description DESC;
