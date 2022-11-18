@@ -4,3 +4,15 @@
 # Get top 2 from grouped by element.
 # https://stackoverflow.com/questions/12113699/get-top-n-records-for-each-group-of-grouped-results
 # SELECT c.* FROM comment AS c LEFT JOIN comment AS cs  ON c.userId = cs.userId AND c.description <= cs.description GROUP BY c.id HAVING COUNT(*) <= 1 ORDER BY c.userId, c.description DESC;
+
+# Playboy
+# Whole
+# SELECT c.*, COUNT(c.id) as count FROM comment AS c LEFT JOIN comment AS cs  ON c.userId = cs.userId AND c.description <= cs.description GROUP BY c.id HAVING COUNT(*) <= 2;
+
+# Step 1
+# 12 row * 1 row has 6 same userId(category), LEFT JOIN will return 72 (12*6) rows
+# SELECT c.* from comment c LEFT JOIN comment as c2 ON c.userId = c2.userId;
+
+# Step 2
+# id, ..., count(6) since every id occurred 6 times, need to eliminate/sort element and remove rows (Therefore we use c.id >= c2.id)
+# SELECT c.*, count(c.id) from comment c LEFT JOIN comment as c2 ON c.userId = c2.userId GROUP BY c.id;
