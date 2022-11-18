@@ -16,3 +16,9 @@
 # Step 2
 # id, ..., count(6) since every id occurred 6 times, need to eliminate/sort element and remove rows (Therefore we use c.id >= c2.id)
 # SELECT c.*, count(c.id) from comment c LEFT JOIN comment as c2 ON c.userId = c2.userId GROUP BY c.id;
+
+# Getting all id
+SELECT c.id FROM comment AS c LEFT JOIN comment AS cs  ON c.userId = cs.userId AND c.description <= cs.description GROUP BY c.id HAVING COUNT(*) <= 2;
+
+# Populate only 2 elements from user.comments
+# SELECT u.*, c2.* FROM user AS u LEFT JOIN (SELECT c.* FROM comment AS c LEFT JOIN comment AS cs  ON c.userId = cs.userId AND c.description <= cs.description GROUP BY c.id HAVING COUNT(*) <= 2) AS c2 ON u.id = c2.userId;
