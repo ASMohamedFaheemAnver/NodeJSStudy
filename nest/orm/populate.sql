@@ -1,0 +1,3 @@
+SELECT `user`.`id` AS `user_id`, `user`.`name` AS `user_name`, `comments`.`id` AS `comments_id`, `comments`.`description` AS `comments_description`, `comments`.`userId` AS `comments_userId` 
+FROM `user` `user` LEFT JOIN `comment` `comments` ON `comments`.`userId`=`user`.`id`
+SELECT `user`.`id` AS `user_id`, `user`.`name` AS `user_name`, `comments`.* FROM `user` `user` LEFT JOIN (SELECT * FROM `comment` `cmt`) `comments` ON comments.userId = `user`.`id`

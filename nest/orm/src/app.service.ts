@@ -27,8 +27,14 @@ export class AppService {
   async getUsersWithComments(): Promise<UserWithComments[]> {
     const qb = this.userRepository
       .createQueryBuilder('user')
-      .leftJoinAndSelect('user.comments', 'comments');
+      .leftJoinAndMapMany(
+        'comments',
+        (subQuery) => subQuery.select().from(Comment, 'cmt'),
+        'comments',
+        '`comments`.`userId` = user.id',
+      );
     const results = await qb.getMany();
+    console.log({ results });
     return results;
   }
 }

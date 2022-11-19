@@ -22,3 +22,6 @@ SELECT c.id FROM comment AS c LEFT JOIN comment AS cs  ON c.userId = cs.userId A
 
 # Populate only 2 elements from user.comments
 # SELECT u.*, c2.* FROM user AS u LEFT JOIN (SELECT c.* FROM comment AS c LEFT JOIN comment AS cs  ON c.userId = cs.userId AND c.description <= cs.description GROUP BY c.id HAVING COUNT(*) <= 2) AS c2 ON u.id = c2.userId;
+
+# F*k typeorm b*ch
+# https://github.com/typeorm/typeorm/issues/4329
