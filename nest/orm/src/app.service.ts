@@ -33,7 +33,7 @@ export class AppService {
         'comments',
         '`comments`.`userId` = user.id',
       );
-    const results = await qb.getMany();
+    const results = await qb.getRawMany();
     console.log({ results });
     return results;
   }
