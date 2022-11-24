@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Comment } from './comment.entity';
 import { UserWithComments } from './user-with-comment';
 import { User } from './user.entity';
+import { In } from 'typeorm';
 
 @Injectable()
 export class AppService {
@@ -25,16 +26,17 @@ export class AppService {
   }
 
   async getUsersWithComments(): Promise<UserWithComments[]> {
-    const qb = this.userRepository
-      .createQueryBuilder('user')
-      .leftJoinAndMapMany(
-        'comments',
-        (subQuery) => subQuery.select().from(Comment, 'cmt'),
-        'comments',
-        '`comments`.`userId` = user.id',
-      );
-    const results = await qb.getRawMany();
-    console.log({ results });
+    const qb = this.userRepository.createQueryBuilder('user');
+    // .leftJoinAndSelect('user.comments', 'comments');
+    const results = await qb.getMany();
+    const ids = results.map((raw) => raw.id);
+    const commentQb = this.commentRepository
+      .createQueryBuilder('comment')
+      .select(['comment.id', 'comment.description', 'user.id'])
+      .where('comment.userId in (:ids)', { ids })
+      .leftJoin('comment.user', 'user');
+    const comments = await commentQb.getMany();
+    console.log({ comments });
     return results;
   }
 }

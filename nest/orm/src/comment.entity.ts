@@ -6,7 +6,7 @@ import { User } from './user.entity';
 @Entity()
 export class Comment {
   @Field((_) => ID)
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn('increment')
   id: string;
 
   @Field()
