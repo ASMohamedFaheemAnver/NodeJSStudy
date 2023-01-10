@@ -13,6 +13,8 @@ export class User {
   @Column()
   name: string;
 
-  @OneToMany(() => Comment, (comment) => comment.user, {})
+  @OneToMany(() => Comment, (comment) => comment.user, {
+    cascade: ['insert', 'update'],
+  })
   comments: Comment[];
 }

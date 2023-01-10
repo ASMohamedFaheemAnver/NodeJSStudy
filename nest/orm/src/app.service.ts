@@ -25,18 +25,27 @@ export class AppService {
     return await this.userRepository.find({});
   }
 
+  async createUser(name: string): Promise<User> {
+    return await this.userRepository.save({ name });
+  }
+
   async getUsersWithComments(): Promise<UserWithComments[]> {
-    const qb = this.userRepository.createQueryBuilder('user');
-    // .leftJoinAndSelect('user.comments', 'comments');
+    const qb = this.userRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.comments', 'comments');
     const results = await qb.getMany();
-    const ids = results.map((raw) => raw.id);
-    const commentQb = this.commentRepository
-      .createQueryBuilder('comment')
-      .select(['comment.id', 'comment.description', 'user.id'])
-      .where('comment.userId in (:ids)', { ids })
-      .leftJoin('comment.user', 'user');
-    const comments = await commentQb.getMany();
-    console.log({ comments });
     return results;
+  }
+
+  async createComment(userId: string, description: string): Promise<Comment> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ['comments'],
+    });
+    const newComment = new Comment();
+    newComment.description = description;
+    user.comments.push(newComment);
+    await this.userRepository.save(user);
+    return newComment;
   }
 }

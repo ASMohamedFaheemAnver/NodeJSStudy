@@ -27,3 +27,8 @@ type Query {
   getUsers: [User!]!
   getUsersWithComments: [UserWithComments!]!
 }
+
+type Mutation {
+  createUser(name: String!): User!
+  createComment(userId: String!, description: String!): Comment!
+}
