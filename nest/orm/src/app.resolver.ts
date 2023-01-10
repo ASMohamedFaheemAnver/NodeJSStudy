@@ -32,8 +32,15 @@ export class AppResolver {
     @Args('name') name: string,
     @Args('imageUrl') imageUrl: string,
     @Args('coverUrl') coverUrl: string,
+    @Args('boolean') boolean: boolean,
   ): Promise<User> {
-    return this.appService.updateUser(userId, name, imageUrl, coverUrl);
+    return this.appService.updateUser(
+      userId,
+      name,
+      imageUrl,
+      coverUrl,
+      boolean,
+    );
   }
 
   getUsersWithComments(): Promise<UserWithComments[]> {

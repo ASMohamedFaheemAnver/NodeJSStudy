@@ -65,14 +65,28 @@ export class AppService {
     name: string,
     imageUrl: string,
     coverUrl: string,
+    boolean: boolean,
   ): Promise<User> {
     const user = await this.userRepository.findOne({
       where: { id: userId },
       relations: ['comments', 'profile', 'cover'],
     });
     user.name = name;
-    user.cover.url = coverUrl;
-    user.profile.url = imageUrl;
+    // Always it will be update and boolean = true
+    if (boolean) {
+      const profile = new Attachment();
+      profile.url = imageUrl;
+      user.profile = profile;
+    } else {
+      user.profile.url = imageUrl;
+    }
+    if (boolean) {
+      const cover = new Attachment();
+      cover.url = coverUrl;
+      user.cover = cover;
+    } else {
+      user.cover.url = coverUrl;
+    }
     await this.userRepository.save(user);
     return user;
   }

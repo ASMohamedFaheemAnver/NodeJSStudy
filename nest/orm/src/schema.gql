@@ -36,6 +36,6 @@ type Query {
 
 type Mutation {
   createUser(name: String!): User!
-  updateUser(userId: String!, name: String!, imageUrl: String!, coverUrl: String!): User!
+  updateUser(userId: String!, name: String!, imageUrl: String!, coverUrl: String!, boolean: Boolean!): User!
   createComment(userId: String!, description: String!): Comment!
 }
