@@ -68,15 +68,11 @@ export class AppService {
   ): Promise<User> {
     const user = await this.userRepository.findOne({
       where: { id: userId },
-      relations: ['comments'],
+      relations: ['comments', 'profile', 'cover'],
     });
     user.name = name;
-    const profile = new Attachment();
-    profile.url = imageUrl;
-    const cover = new Attachment();
-    cover.url = coverUrl;
-    user.profile = profile;
-    user.cover = cover;
+    user.cover.url = coverUrl;
+    user.profile.url = imageUrl;
     await this.userRepository.save(user);
     return user;
   }

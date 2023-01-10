@@ -27,3 +27,5 @@ SELECT c.id FROM comment AS c LEFT JOIN comment AS cs  ON c.userId = cs.userId A
 # https://github.com/typeorm/typeorm/issues/4329
 # Is it possible to use subquery in leftJoinAndSelect in TypeORM
 # https://stackoverflow.com/questions/61275599/is-it-possible-to-use-subquery-in-leftjoinandselect-in-typeorm
+
+# While updating children we should not update the id
