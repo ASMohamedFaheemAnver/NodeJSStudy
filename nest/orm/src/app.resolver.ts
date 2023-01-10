@@ -26,7 +26,16 @@ export class AppResolver {
     return this.appService.createUser(name);
   }
 
-  @Query((_) => [UserWithComments])
+  @Mutation((_) => User)
+  updateUser(
+    @Args('userId') userId: string,
+    @Args('name') name: string,
+    @Args('imageUrl') imageUrl: string,
+    @Args('coverUrl') coverUrl: string,
+  ): Promise<User> {
+    return this.appService.updateUser(userId, name, imageUrl, coverUrl);
+  }
+
   getUsersWithComments(): Promise<UserWithComments[]> {
     return this.appService.getUsersWithComments();
   }

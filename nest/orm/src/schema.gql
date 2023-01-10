@@ -24,23 +24,18 @@ type Message {
 type UserWithAttachment {
   id: ID!
   name: String!
-  profile: Attachment!
-}
-
-type UserWithComments {
-  id: ID!
-  name: String!
-  comments: [Comment!]!
+  profile: Attachment
+  cover: Attachment
 }
 
 type Query {
   root: Message!
   getUsers: [User!]!
-  getUsersWithComments: [UserWithComments!]!
   getUsersWithAttachments: [UserWithAttachment!]!
 }
 
 type Mutation {
   createUser(name: String!): User!
+  updateUser(userId: String!, name: String!, imageUrl: String!, coverUrl: String!): User!
   createComment(userId: String!, description: String!): Comment!
 }

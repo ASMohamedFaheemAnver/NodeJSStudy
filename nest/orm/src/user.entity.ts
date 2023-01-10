@@ -26,11 +26,15 @@ export class User {
   })
   comments: Comment[];
 
-  @OneToOne(() => Attachment, (profile) => profile.user)
+  @OneToOne(() => Attachment, (profile) => profile.user, {
+    cascade: ['insert', 'update'],
+  })
   @JoinColumn()
   profile: Attachment;
 
-  @OneToOne(() => Attachment, (profile) => profile.user)
+  @OneToOne(() => Attachment, (profile) => profile.user, {
+    cascade: ['insert', 'update'],
+  })
   @JoinColumn()
   cover: Attachment;
 }

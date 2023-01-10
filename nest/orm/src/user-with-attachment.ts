@@ -5,6 +5,9 @@ import { User } from './user.entity';
 
 @ObjectType()
 export class UserWithAttachment extends User {
-  @Field(() => Attachment)
+  @Field(() => Attachment, { nullable: true })
   profile: Attachment;
+
+  @Field(() => Attachment, { nullable: true })
+  cover: Attachment;
 }
