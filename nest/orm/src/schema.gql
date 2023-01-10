@@ -2,6 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Attachment {
+  id: ID!
+  url: String!
+}
+
 type User {
   id: ID!
   name: String!
@@ -16,6 +21,12 @@ type Message {
   message: String!
 }
 
+type UserWithAttachment {
+  id: ID!
+  name: String!
+  profile: Attachment!
+}
+
 type UserWithComments {
   id: ID!
   name: String!
@@ -26,6 +37,7 @@ type Query {
   root: Message!
   getUsers: [User!]!
   getUsersWithComments: [UserWithComments!]!
+  getUsersWithAttachments: [UserWithAttachment!]!
 }
 
 type Mutation {

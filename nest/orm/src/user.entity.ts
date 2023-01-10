@@ -1,5 +1,13 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Attachment } from './attachment.entity';
 import { Comment } from './comment.entity';
 
 @ObjectType()
@@ -17,4 +25,12 @@ export class User {
     cascade: ['insert', 'update'],
   })
   comments: Comment[];
+
+  @OneToOne(() => Attachment, (profile) => profile.user)
+  @JoinColumn()
+  profile: Attachment;
+
+  @OneToOne(() => Attachment, (profile) => profile.user)
+  @JoinColumn()
+  cover: Attachment;
 }

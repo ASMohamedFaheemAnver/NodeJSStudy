@@ -5,6 +5,7 @@ import { Comment } from './comment.entity';
 import { UserWithComments } from './user-with-comment';
 import { User } from './user.entity';
 import { In } from 'typeorm';
+import { UserWithAttachment } from './user-with-attachment';
 
 @Injectable()
 export class AppService {
@@ -33,6 +34,14 @@ export class AppService {
     const qb = this.userRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.comments', 'comments');
+    const results = await qb.getMany();
+    return results;
+  }
+
+  async getUsersWithAttachments(): Promise<UserWithAttachment[]> {
+    const qb = this.userRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.profile', 'profile');
     const results = await qb.getMany();
     return results;
   }

@@ -2,6 +2,7 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AppService } from './app.service';
 import { Comment } from './comment.entity';
 import { Message } from './constants/message';
+import { UserWithAttachment } from './user-with-attachment';
 import { UserWithComments } from './user-with-comment';
 import { User } from './user.entity';
 
@@ -28,6 +29,11 @@ export class AppResolver {
   @Query((_) => [UserWithComments])
   getUsersWithComments(): Promise<UserWithComments[]> {
     return this.appService.getUsersWithComments();
+  }
+
+  @Query((_) => [UserWithAttachment])
+  getUsersWithAttachments(): Promise<UserWithAttachment[]> {
+    return this.appService.getUsersWithAttachments();
   }
 
   @Mutation((_) => Comment)
