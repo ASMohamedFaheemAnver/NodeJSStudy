@@ -1,0 +1,18 @@
+It's possible that findOne() is not returning the created user because the code is running inside a transaction using a session, and the created user has not yet been committed to the database at the time findOne() is called.
+
+When working with transactions and sessions in MongoDB, any changes made to the database within the transaction are only visible within the transaction until it is committed. Therefore, if you create a new user within a transaction using a session, you won't be able to see that user outside of the transaction until it has been committed.
+
+In your code, you are creating a new user using newUser.save({ session }), which ensures that the new user is saved within the session. However, when you call findOne() on this.userModel, it does not include the session and therefore cannot see any changes made within the transaction until it is committed.
+
+To fix this, you can pass the session to findOne() like so:
+
+const userWithinSession = await this.userModel.findOne().session(session);
+console.log({ userWithinSession });
+This will ensure that findOne() uses the same session as the transaction and is able to see the changes made within the transaction, including the newly created user.
+
+Alternatively, you can move the findOne() call to after the transaction is committed, so that it can see the changes made to the database:
+
+await session.commitTransaction();
+const userWithoutSession = await this.userModel.findOne();
+console.log({ userWithoutSession });
+In this case, findOne() does not need to be called with a session because it is being called after the transaction has been committed, and therefore can see the changes made to the database.
