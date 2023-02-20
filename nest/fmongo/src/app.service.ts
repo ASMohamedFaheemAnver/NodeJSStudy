@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+import { writeFile } from 'fs';
 import mongoose, { Model, Types } from 'mongoose';
 import {
   Profile,
@@ -7,6 +8,7 @@ import {
   ProfileSchema,
 } from './schemas/profile.schema';
 import { User, UserDocument } from './schemas/user.schema';
+import { outputJson } from './utils';
 
 @Injectable()
 export class AppService {
@@ -74,7 +76,7 @@ export class AppService {
     }
   }
 
-  async populate() {
+  async populateOne() {
     // Cleanup and relationship creation
     await this.userModel.deleteMany();
     await this.profileModel.deleteMany();
@@ -150,5 +152,95 @@ export class AppService {
       },
     ]);
     console.log({ filteredUsersM2 });
+  }
+
+  async populateMulti() {
+    // Cleanup and relationship creation
+    await this.userModel.deleteMany();
+    await this.profileModel.deleteMany();
+    // User 1
+    const newProfile1 = new this.profileModel({ points: 100 });
+    await newProfile1.save();
+    const newProfile2 = new this.profileModel({ points: 110 });
+    await newProfile2.save();
+    const newUser1 = new this.userModel({
+      name: 'udev',
+      age: 25,
+    });
+    newUser1.profiles.push(newProfile1);
+    newUser1.profiles.push(newProfile2);
+    await newUser1.save();
+    // User 2
+    const newProfile3 = new this.profileModel({ points: 200 });
+    await newProfile3.save();
+    const newProfile4 = new this.profileModel({ points: 210 });
+    await newProfile4.save();
+    const newUser2 = new this.userModel({
+      name: 'na',
+      age: 24,
+    });
+    newUser2.profiles.push(newProfile3);
+    newUser2.profiles.push(newProfile4);
+    await newUser2.save();
+    // End of data creation
+
+    // Find user with points above 150 in at least one profile
+    const filteredUsersM1 = await this.userModel.aggregate([
+      {
+        $lookup: {
+          from: this.profileModel.collection.name,
+          let: { pIds: '$profiles' },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $in: ['$_id', '$$pIds'],
+                },
+                points: {
+                  $gt: 150,
+                },
+              },
+            },
+          ],
+          as: 'profiles',
+        },
+      },
+      // Filter empty array option 1
+      // {
+      //   $match: {
+      //     $expr: {
+      //       $ne: [
+      //         0,
+      //         {
+      //           $size: '$profiles',
+      //         },
+      //       ],
+      //     },
+      //   },
+      // },
+      // Filter empty array option 2
+      // {
+      //   $match: {
+      //     $expr: {
+      //       $gt: [{ $size: '$profiles' }, 0],
+      //     },
+      //   },
+      // },
+      // Filter empty array option 3
+      {
+        // Project will remove other fields therefor I am using addFields to concat new variable
+        // https://stackoverflow.com/questions/19431773/include-all-existing-fields-and-add-new-fields-to-document
+        $addFields: {
+          size: { $size: '$profiles' },
+        },
+      },
+      {
+        $match: {
+          size: { $gt: 0 },
+        },
+      },
+    ]);
+    console.log({ filteredUsersM1 });
+    outputJson(JSON.stringify(filteredUsersM1));
   }
 }

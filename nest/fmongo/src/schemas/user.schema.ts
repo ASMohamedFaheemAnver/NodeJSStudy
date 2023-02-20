@@ -12,9 +12,12 @@ export class User {
   @Prop(Number)
   age: number;
 
-  @Prop({ type: Types.ObjectId, ref: Profile.name, required: true })
+  @Prop({ type: Types.ObjectId, ref: Profile.name })
   // If we assign  new Types.ObjectId(rId) it will give error if we don't accept Types.ObjectId
   profile: Profile | Types.ObjectId;
+
+  @Prop({ type: [{ type: Types.ObjectId, ref: Profile.name }], required: true })
+  profiles: Profile[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
