@@ -1,6 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model } from 'mongoose';
+import mongoose, { Model, Types } from 'mongoose';
+import {
+  Profile,
+  ProfileDocument,
+  ProfileSchema,
+} from './schemas/profile.schema';
 import { User, UserDocument } from './schemas/user.schema';
 
 @Injectable()
@@ -8,6 +13,7 @@ export class AppService {
   private readonly logger = new Logger(AppService.name);
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
+    @InjectModel(Profile.name) private profileModel: Model<ProfileDocument>,
     @InjectConnection() private connection: mongoose.Connection,
   ) {}
 
@@ -66,5 +72,54 @@ export class AppService {
       session.endSession();
       throw e;
     }
+  }
+
+  async populate() {
+    // Cleanup and relationship creation
+    await this.userModel.deleteMany();
+    await this.profileModel.deleteMany();
+    // User 1
+    const newProfile1 = new this.profileModel({ points: 100 });
+    await newProfile1.save();
+    const newUser1 = new this.userModel({
+      name: 'udev',
+      age: 25,
+    });
+    // Testing reference assign
+    newUser1.profile = new Types.ObjectId(newProfile1._id);
+    await newUser1.save();
+    // User 2
+    const newProfile2 = new this.profileModel({ points: 200 });
+    await newProfile2.save();
+    const newUser2 = new this.userModel({
+      name: 'na',
+      age: 24,
+    });
+    newUser2.profile = newProfile2._id;
+    await newUser2.save();
+    // End of data creation
+
+    // Find user with points above 150
+    const filteredUsers = await this.userModel.aggregate([
+      {
+        $lookup: {
+          from: this.profileModel.collection.name,
+          localField: 'profile',
+          foreignField: '_id',
+          as: 'profile',
+        },
+      },
+      // {
+      // https://stackoverflow.com/questions/16448175/whats-the-unwind-operator-in-mongodb
+      // This will spread array and create multiple rows/collections if profile is an array
+      //   $unwind: '$profile',
+      // },
+      {
+        $match: {
+          'profile.points': { $gt: 150 },
+        },
+      },
+    ]);
+    console.log({ filteredUsers });
   }
 }
