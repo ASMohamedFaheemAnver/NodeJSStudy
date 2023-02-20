@@ -100,7 +100,7 @@ export class AppService {
     // End of data creation
 
     // Find user with points above 150
-    const filteredUsers = await this.userModel.aggregate([
+    const filteredUsersM1 = await this.userModel.aggregate([
       {
         $lookup: {
           from: this.profileModel.collection.name,
@@ -120,6 +120,35 @@ export class AppService {
         },
       },
     ]);
-    console.log({ filteredUsers });
+    // console.log({ filteredUsersM1 });
+
+    const filteredUsersM2 = await this.userModel.aggregate([
+      {
+        $lookup: {
+          from: this.profileModel.collection.name,
+          let: { pId: '$profile' },
+          // This will be mapped to all users
+          pipeline: [
+            // Object comparison not working like this instead we need to use $eq
+            // { $match: { _id: '$$pId' } },
+            {
+              $match: {
+                points: {
+                  $gt: 150,
+                },
+                // I have forgot this step in some study previously, Important
+                $expr: { $eq: ['$_id', '$$pId'] },
+              },
+            },
+            // { $project: { pId: '$$pId', _id: 1 } },
+          ],
+          as: 'profile',
+        },
+      },
+      {
+        $unwind: '$profile',
+      },
+    ]);
+    console.log({ filteredUsersM2 });
   }
 }
