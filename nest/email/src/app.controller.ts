@@ -6,7 +6,7 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  mail(): boolean {
+  mail(): Promise<boolean> {
     return this.appService.mail();
   }
 }

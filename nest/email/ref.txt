@@ -1,0 +1,5 @@
+# Login to send grid
+# Goto Settings -> Sender authentication -> Create a single sender and verify
+# Video
+# https://www.youtube.com/watch?v=MFuqPVCiW7A&ab_channel=NaveenBommidiTechSeeker
+# Click email integration -> SMTP -> Add Key Name
