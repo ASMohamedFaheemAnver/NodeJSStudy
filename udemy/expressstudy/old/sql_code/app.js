@@ -15,8 +15,8 @@ const Product = require("./models/product");
 const User = require("./models/user");
 const Cart = require("./models/cart");
 const CartItem = require("./models/cart-item");
-const Order = require('./models/order');
-const OrderItem = require('./models/order-item');
+const Order = require("./models/order");
+const OrderItem = require("./models/order-item");
 
 // const hbs = require('express-handlebars');
 
@@ -38,7 +38,7 @@ const app = express();
 app.set("view engine", "ejs");
 
 // Where we can find the dynamic html files
-app.set("veiws", "views");
+app.set("views", "views");
 
 // db.execute("SELECT * FROM products")
 //   .then(result => {
@@ -52,11 +52,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use((req, res, next) => {
   User.findByPk(1)
-    .then(user => {
+    .then((user) => {
       req.user = user;
       next();
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
     });
 });
@@ -85,10 +85,10 @@ let oUser;
 sequelize
   // .sync({force: true})
   .sync()
-  .then(_ => {
+  .then((_) => {
     return User.findByPk(1);
   })
-  .then(user => {
+  .then((user) => {
     if (!user) {
       return User.create({ name: "RiFa", email: "jstrfaheem065@gmail.com" });
     }
@@ -96,20 +96,21 @@ sequelize
     oUser = user;
     return user;
   })
-  .then(user => {
+  .then((user) => {
     oUser = user;
     return user.getCart();
-  }).then(cart=>{
-    if(!cart&&oUser){
+  })
+  .then((cart) => {
+    if (!cart && oUser) {
       return oUser.createCart();
     }
   })
-  .then(_ => {
+  .then((_) => {
     app.listen(PORT, () => {
       console.log("Server is running on : localhost:" + PORT);
     });
   })
-  .catch(err => {
+  .catch((err) => {
     console.log(err);
   });
 

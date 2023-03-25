@@ -22,7 +22,7 @@ const app = express();
 app.set("view engine", "ejs");
 
 // Where we can find the dynamic html files
-app.set("veiws", "views");
+app.set("views", "views");
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {

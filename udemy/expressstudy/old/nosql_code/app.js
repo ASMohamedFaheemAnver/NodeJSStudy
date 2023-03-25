@@ -32,7 +32,7 @@ const app = express();
 app.set("view engine", "ejs");
 
 // Where we can find the dynamic html files
-app.set("veiws", "views");
+app.set("views", "views");
 
 // db.execute("SELECT * FROM products")
 //   .then(result => {
@@ -47,11 +47,11 @@ const mongoConnect = require("./util/database").mongoConnect;
 
 app.use((req, res, next) => {
   User.findByPk("5e368c3ce02ebd25a0a1ad9b")
-    .then(user => {
+    .then((user) => {
       req.user = new User(user.username, user.email, user.cart, user._id);
       next();
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
     });
 });
