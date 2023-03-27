@@ -1,0 +1,16 @@
+{
+  "name": "es6",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "license": "AGPL-version-3.0",
+  "private": false,
+  "engines": {
+    "node": ">= 14.0.0",
+    "npm": ">= 6.0.0"
+  },
+  "keywords": [],
+  "contributors": [],
+  "dependencies": {},
+  "devDependencies": {}
+}
