@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { Comment } from './comment.entity';
 import { UserWithComments } from './user-with-comment';
 import { User } from './user.entity';
-import { In } from 'typeorm';
 import { UserWithAttachment } from './user-with-attachment';
 import { Attachment } from './attachment.entity';
 
@@ -25,6 +24,14 @@ export class AppService {
   }
   async getUsers(): Promise<User[]> {
     return await this.userRepository.find({});
+  }
+
+  async getUserWithFavoriteUsers() {
+    const users = await this.userRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.favorites', 'favorites')
+      .getMany();
+    return users;
   }
 
   async createUser(name: string): Promise<User> {

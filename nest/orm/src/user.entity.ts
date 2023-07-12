@@ -3,6 +3,8 @@ import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -37,4 +39,8 @@ export class User {
   })
   @JoinColumn()
   cover: Attachment;
+
+  @ManyToMany(() => User)
+  @JoinTable()
+  favorites: User[];
 }
