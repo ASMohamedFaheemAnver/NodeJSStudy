@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { QueryBuilder, Repository, SelectQueryBuilder } from 'typeorm';
 import { Comment } from './comment.entity';
 import { UserWithComments } from './user-with-comment';
 import { User } from './user.entity';
@@ -47,12 +47,22 @@ export class AppService {
   }
 
   async getUsersWithAttachments(): Promise<UserWithAttachment[]> {
-    const qb = this.userRepository
-      .createQueryBuilder('user')
-      .leftJoinAndSelect('user.profile', 'profile')
-      .leftJoinAndSelect('user.cover', 'cover');
+    const qb = this.getUserQueryBuilder();
+    this.leftJoinUserProfile(qb);
+    this.leftJoinUserCover(qb);
     const results = await qb.getMany();
     return results;
+  }
+
+  getUserQueryBuilder() {
+    return this.userRepository.createQueryBuilder('user');
+  }
+
+  leftJoinUserProfile(qb: SelectQueryBuilder<User>) {
+    return qb.leftJoinAndSelect('user.profile', 'profile');
+  }
+  leftJoinUserCover(qb: SelectQueryBuilder<User>) {
+    return qb.leftJoinAndSelect('user.cover', 'cover');
   }
 
   async createComment(userId: string, description: string): Promise<Comment> {
