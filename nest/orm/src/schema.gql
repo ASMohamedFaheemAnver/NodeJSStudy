@@ -28,9 +28,16 @@ type UserWithAttachment {
   cover: Attachment
 }
 
+type UserWithComments {
+  id: ID!
+  name: String!
+  comments: [Comment!]!
+}
+
 type Query {
   root: Message!
   getUsers: [User!]!
+  getUsersWithComments: [UserWithComments!]!
   getUsersWithAttachments: [UserWithAttachment!]!
 }
 

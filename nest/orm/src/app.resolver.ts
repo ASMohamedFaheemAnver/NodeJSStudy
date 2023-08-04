@@ -43,6 +43,7 @@ export class AppResolver {
     );
   }
 
+  @Query((_) => [UserWithComments])
   getUsersWithComments(): Promise<UserWithComments[]> {
     return this.appService.getUsersWithComments();
   }
