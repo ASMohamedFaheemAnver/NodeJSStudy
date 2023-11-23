@@ -34,11 +34,18 @@ type UserWithComments {
   comments: [Comment!]!
 }
 
+type UserWithFavoriteUsers {
+  id: ID!
+  name: String!
+  favorites: [User!]!
+}
+
 type Query {
   root: Message!
   getUsers: [User!]!
   getUsersWithComments: [UserWithComments!]!
   getUsersWithAttachments: [UserWithAttachment!]!
+  getUserWithFavoriteUsers: [UserWithFavoriteUsers!]!
 }
 
 type Mutation {

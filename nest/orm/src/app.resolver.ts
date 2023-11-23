@@ -5,6 +5,7 @@ import { Message } from './constants/message';
 import { UserWithAttachment } from './user-with-attachment';
 import { UserWithComments } from './user-with-comment';
 import { User } from './user.entity';
+import { UserWithFavoriteUsers } from './user-with-favorite-users';
 
 @Resolver()
 export class AppResolver {
@@ -51,6 +52,11 @@ export class AppResolver {
   @Query((_) => [UserWithAttachment])
   getUsersWithAttachments(): Promise<UserWithAttachment[]> {
     return this.appService.getUsersWithAttachments();
+  }
+
+  @Query((_) => [UserWithFavoriteUsers])
+  getUserWithFavoriteUsers(): Promise<UserWithFavoriteUsers[]> {
+    return this.appService.getUserWithFavoriteUsers();
   }
 
   @Mutation((_) => Comment)

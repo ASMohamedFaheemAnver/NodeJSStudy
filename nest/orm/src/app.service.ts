@@ -30,7 +30,9 @@ export class AppService {
     const users = await this.userRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.favorites', 'favorites')
+      .addOrderBy('favorites.id')
       .getMany();
+
     return users;
   }
 
@@ -41,14 +43,10 @@ export class AppService {
   async getUsersWithComments(): Promise<UserWithComments[]> {
     const qb = this.userRepository
       .createQueryBuilder('user')
-      .leftJoinAndMapMany(
-        'user.comments',
-        (sq) => sq.from(Comment, 'sqCmd'),
-        'cmd',
-        'cmd.userId = user.id',
-      );
-    const results = await qb.getRawMany();
-    console.log({ results, length: results.length });
+      .leftJoinAndSelect('user.comments', 'cmd', 'cmd.userId = user.id')
+      // Order by works
+      .addOrderBy('cmd.description');
+    const results = await qb.getMany();
     return results;
   }
 
