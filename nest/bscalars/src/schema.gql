@@ -1,0 +1,32 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Pet {
+  id: HashedID!
+  name: String!
+  type: String
+}
+
+"""HashedID"""
+scalar HashedID
+
+type Query {
+  findAllPets: [Pet!]!
+}
+
+type Mutation {
+  createPet(createPetInput: createPetInput!): Pet!
+  updatePet(updatePetInput: updatePetInput!): Pet!
+}
+
+input createPetInput {
+  name: String!
+  type: String
+}
+
+input updatePetInput {
+  id: HashedID!
+  name: String!
+  type: String
+}
