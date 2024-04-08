@@ -38,3 +38,20 @@
 
 # Multiple graphql clients using split operation
 # https://www.jamalx31.com/tech-posts/using-apollo-with-multiple-graphql-endpoints
+
+
+# Select and map workaround by adding overload.
+# https://stackoverflow.com/a/66696949/11727385
+# https://github.com/typeorm/typeorm/issues/1822#issuecomment-573492291
+@Column('int', { select: false })
+total: number;
+(await this.getRepository(JobCategory))
+      .createQueryBuilder('category')
+      .addSelect('COUNT(jobs.id)', 'category_total')
+      .leftJoin('category.jobs', 'jobs')
+      .groupBy('category.id')
+      .orderBy('category.name', 'ASC')
+      .getMany();
+In my query builder I added an addSelect() with first parameter as COUNT(jobs.id) and second parameter for an alias as category_total.
+Note: As you can see I have prepend category_ to the alias total, this will map the total column to the actual result of category entity. Without category_ in the alias the total column will not be visible.
+My QueryBuilder:
