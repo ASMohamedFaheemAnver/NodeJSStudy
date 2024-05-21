@@ -40,10 +40,22 @@ const getDB = require("../db/db");
           full_name: {
             $concat: [
               { $toUpper: { $substrCP: ["$name.first", 0, 1] } },
-              { $substrCP: ["$name.first", 1, { $subtract: [{ $strLenCP: "$name.first" }, 1] }] },
+              {
+                $substrCP: [
+                  "$name.first",
+                  1,
+                  { $subtract: [{ $strLenCP: "$name.first" }, 1] },
+                ],
+              },
               " ",
               { $toUpper: { $substrCP: ["$name.last", 0, 1] } },
-              { $substrCP: ["$name.last", 1, { $subtract: [{ $strLenCP: "$name.last" }, 1] }] },
+              {
+                $substrCP: [
+                  "$name.last",
+                  1,
+                  { $subtract: [{ $strLenCP: "$name.last" }, 1] },
+                ],
+              },
             ],
           },
         },

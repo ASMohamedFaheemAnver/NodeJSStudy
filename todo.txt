@@ -1,0 +1,4 @@
+# Todo
+-> $search operator.
+-> Once u add data mongodb will index them to Lucene in the mongodb backend and will be managed by mongodb.
+-> Demo : https://www.atlassearchrestaurants.com/
