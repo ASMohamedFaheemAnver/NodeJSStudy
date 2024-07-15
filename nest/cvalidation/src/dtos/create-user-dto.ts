@@ -55,9 +55,10 @@ function IsEmail(target: any, propertyKey: string) {
 
 // Example usage of decorators
 export class CreateUserDto {
-  @IsString
+  // @IsString
   private name: string;
-  @IsEmail
+  // @IsEmail
+  @IsArray()
   private email: string;
   constructor(name: string, email: string) {
     this.name = name;
