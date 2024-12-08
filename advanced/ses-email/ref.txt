@@ -1,0 +1,13 @@
+# https://www.youtube.com/watch?v=uv6O22OLFoU
+# https://www.youtube.com/watch?v=_PD4j5Ra3kY&t=40s - 4.28
+
+# Install aws cli
+brew install awscli
+# Configure aws
+aws configure
+# Start localstack
+localstack start
+# Verify email
+aws ses verify-email-identity \
+    --email-address faheem065@gmail.com \
+    --endpoint-url http://localhost:4566
