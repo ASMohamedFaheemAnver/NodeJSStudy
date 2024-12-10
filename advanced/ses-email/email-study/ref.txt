@@ -1,0 +1,2 @@
+# We now support setting baseUrl in jsconfig.json and tsconfig.json. To configure baseUrl to point to the src directory in your JavaScript project, create a jsconfig.json file in your project root:
+-> https://github.com/facebook/create-react-app/releases/tag/v3.0.0
